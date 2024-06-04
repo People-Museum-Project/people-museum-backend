@@ -1,0 +1,12 @@
+runtime: python310
+
+entrypoint: gunicorn -b :$PORT main:app
+
+env_variables:
+  DB_HOST: "34.29.153.67"
+  DB_NAME: "postgres"
+  DB_USER: "postgres"
+  DB_PASSWORD: "admin"
+
+  FLASK_ENV: "production"
+  FLASK_APP: "main.py"
