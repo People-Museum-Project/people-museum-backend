@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>People Museum</title>
+</head>
+<body>
+    <h1>People Museum</h1>
+
+    <h2>Create a New Person</h2>
+    <form id="personForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="image">Image URL:</label>
+        <input type="text" id="image" name="image"><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea><br>
+
+        <label for="bio_docs">Bio Docs (comma separated):</label>
+        <input type="text" id="bio_docs" name="bio_docs"><br>
+
+        <label for="authored_docs">Authored Docs (comma separated):</label>
+        <input type="text" id="authored_docs" name="authored_docs"><br>
+
+        <label for="collections">Collections (comma separated integers):</label>
+        <input type="text" id="collections" name="collections"><br>
+
+        <label for="owner">Owner ID:</label>
+        <input type="number" id="owner" name="owner"><br>
+
+        <label for="share_list">Share List (comma separated integers):</label>
+        <input type="text" id="share_list" name="share_list"><br>
+
+        <label for="is_public">Is Public:</label>
+        <input type="checkbox" id="is_public" name="is_public"><br>
+
+        <button type="submit">Create Person</button>
+    </form>
+
+    <h2>Read a Person</h2>
+    <form id="readPersonForm">
+        <label for="read_person_id">Person ID:</label>
+        <input type="number" id="read_person_id" name="read_person_id" required><br>
+        <button type="submit">Read Person</button>
+    </form>
+
+    <div id="personResult"></div>
+
+    <h2>Update a Person</h2>
+    <form id="updatePersonForm">
+        <label for="update_person_id">Person ID:</label>
+        <input type="number" id="update_person_id" name="update_person_id" required><br>
+
+        <label for="update_name">Name:</label>
+        <input type="text" id="update_name" name="update_name"><br>
+
+        <label for="update_image">Image URL:</label>
+        <input type="text" id="update_image" name="update_image"><br>
+
+        <label for="update_description">Description:</label>
+        <textarea id="update_description" name="update_description"></textarea><br>
+
+        <label for="update_bio_docs">Bio Docs (comma separated):</label>
+        <input type="text" id="update_bio_docs" name="update_bio_docs"><br>
+
+        <label for="update_authored_docs">Authored Docs (comma separated):</label>
+        <input type="text" id="update_authored_docs" name="update_authored_docs"><br>
+
+        <label for="update_collections">Collections (comma separated integers):</label>
+        <input type="text" id="update_collections" name="update_collections"><br>
+
+        <label for="update_owner">Owner ID:</label>
+        <input type="number" id="update_owner" name="update_owner"><br>
+
+        <label for="update_share_list">Share List (comma separated integers):</label>
+        <input type="text" id="update_share_list" name="update_share_list"><br>
+
+        <label for="update_is_public">Is Public:</label>
+        <input type="checkbox" id="update_is_public" name="update_is_public"><br>
+
+        <button type="submit">Update Person</button>
+    </form>
+
+    <h2>Delete a Person</h2>
+    <form id="deletePersonForm">
+        <label for="delete_person_id">Person ID:</label>
+        <input type="number" id="delete_person_id" name="delete_person_id" required><br>
+        <button type="submit">Delete Person</button>
+    </form>
+
+    <h2>Create a New Collection</h2>
+    <form id="collectionForm">
+        <label for="collection_name">Name:</label>
+        <input type="text" id="collection_name" name="collection_name" required><br>
+
+        <label for="collection_image">Image URL:</label>
+        <input type="text" id="collection_image" name="collection_image"><br>
+
+        <label for="collection_description">Description:</label>
+        <textarea id="collection_description" name="collection_description"></textarea><br>
+
+        <label for="collection_bio_docs">Bio Docs (comma separated):</label>
+        <input type="text" id="collection_bio_docs" name="collection_bio_docs"><br>
+
+        <label for="collection_people">People IDs (comma separated integers):</label>
+        <input type="text" id="collection_people" name="collection_people"><br>
+
+        <label for="collection_owner">Owner ID:</label>
+        <input type="number" id="collection_owner" name="collection_owner"><br>
+
+        <label for="collection_share_list">Share List (comma separated integers):</label>
+        <input type="text" id="collection_share_list" name="collection_share_list"><br>
+
+        <label for="collection_is_public">Is Public:</label>
+        <input type="checkbox" id="collection_is_public" name="collection_is_public"><br>
+
+        <button type="submit">Create Collection</button>
+    </form>
+
+    <h2>Read a Collection</h2>
+    <form id="readCollectionForm">
+        <label for="read_collection_id">Collection ID:</label>
+        <input type="number" id="read_collection_id" name="read_collection_id" required><br>
+        <button type="submit">Read Collection</button>
+    </form>
+
+    <div id="collectionResult"></div>
+
+    <h2>Update a Collection</h2>
+    <form id="updateCollectionForm">
+        <label for="update_collection_id">Collection ID:</label>
+        <input type="number" id="update_collection_id" name="update_collection_id" required><br>
+
+        <label for="update_collection_name">Name:</label>
+        <input type="text" id="update_collection_name" name="update_collection_name"><br>
+
+        <label for="update_collection_image">Image URL:</label>
+        <input type="text" id="update_collection_image" name="update_collection_image"><br>
+
+        <label for="update_collection_description">Description:</label>
+        <textarea id="update_collection_description" name="update_collection_description"></textarea><br>
+
+        <label for="update_collection_bio_docs">Bio Docs (comma separated):</label>
+        <input type="text" id="update_collection_bio_docs" name="update_collection_bio_docs"><br>
+
+        <label for="update_collection_people">People IDs (comma separated integers):</label>
+        <input type="text" id="update_collection_people" name="update_collection_people"><br>
+
+        <label for="update_collection_owner">Owner ID:</label>
+        <input type="number" id="update_collection_owner" name="update_collection_owner"><br>
+
+        <label for="update_collection_share_list">Share List (comma separated integers):</label>
+        <input type="text" id="update_collection_share_list" name="update_collection_share_list"><br>
+
+        <label for="update_collection_is_public">Is Public:</label>
+        <input type="checkbox" id="update_collection_is_public" name="update_collection_is_public"><br>
+
+        <button type="submit">Update Collection</button>
+    </form>
+
+    <h2>Delete a Collection</h2>
+    <form id="deleteCollectionForm">
+        <label for="delete_collection_id">Collection ID:</label>
+        <input type="number" id="delete_collection_id" name="delete_collection_id" required><br>
+        <button type="submit">Delete Collection</button>
+    </form>
+
+    <script>
+        // Helper function to handle form submissions
+        function handleFormSubmit(event, url, method, successMessage, resultElementId) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const formObject = {};
+            formData.forEach((value, key) => {
+                if (key.includes('bio_docs') || key.includes('authored_docs') || key.includes('collections') || key.includes('share_list') || key.includes('people')) {
+                    formObject[key] = value.split(',').map(item => item.trim());
+                } else {
+                    formObject[key] = value;
+                }
+            });
+
+            if (formObject['is_public'] !== undefined) {
+                formObject['is_public'] = document.getElementById(event.target.id + '_is_public').checked;
+            }
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formObject)
+            })
+            .then(response => response.json())
+            .then(data
+            .then(data => {
+                if (resultElementId) {
+                    document.getElementById(resultElementId).textContent = JSON.stringify(data, null, 2);
+                } else {
+                    alert(successMessage);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Event listeners for form submissions
+        document.getElementById('personForm').addEventListener('submit', function(event) {
+            handleFormSubmit(event, '/create_person', 'POST', 'Person created successfully');
+        });
+
+        document.getElementById('readPersonForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const personId = document.getElementById('read_person_id').value;
+            fetch(`/read_person/${personId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('personResult').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        document.getElementById('updatePersonForm').addEventListener('submit', function(event) {
+            const personId = document.getElementById('update_person_id').value;
+            handleFormSubmit(event, `/update_person/${personId}`, 'PUT', 'Person updated successfully');
+        });
+
+        document.getElementById('deletePersonForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const personId = document.getElementById('delete_person_id').value;
+            fetch(`/delete_person/${personId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Person deleted successfully');
+                    } else {
+                        alert('Failed to delete person');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        document.getElementById('collectionForm').addEventListener('submit', function(event) {
+            handleFormSubmit(event, '/create_collection', 'POST', 'Collection created successfully');
+        });
+
+        document.getElementById('readCollectionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const collectionId = document.getElementById('read_collection_id').value;
+            fetch(`/read_collection/${collectionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('collectionResult').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        document.getElementById('updateCollectionForm').addEventListener('submit', function(event) {
+            const collectionId = document.getElementById('update_collection_id').value;
+            handleFormSubmit(event, `/update_collection/${collectionId}`, 'PUT', 'Collection updated successfully');
+        });
+
+        document.getElementById('deleteCollectionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const collectionId = document.getElementById('delete_collection_id').value;
+            fetch(`/delete_collection/${collectionId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Collection deleted successfully');
+                    } else {
+                        alert('Failed to delete collection');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>

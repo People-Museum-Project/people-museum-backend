@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index Page</title>
+</head>
+<body>
+    <h1>Recent People</h1>
+    <ul>
+        {% for person in recent_people %}
+            <li>{{ person.name }} - {{ person.description }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Recent Collections</h1>
+    <ul>
+        {% for collection in recent_collections %}
+            <li>{{ collection.name }} - {{ collection.description }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,7 +1,20 @@
-from flask import Flask, request, jsonify
-from database import add_person, add_collection, get_person, get_collection
+import os
+import sys
+from flask import Flask, request, jsonify, render_template
+from database import add_person, add_collection, get_person, get_collection, get_index_context
+from db import init_db, SessionLocal
+from create_tables import create_tables
+
+# Ensure the current directory is in the Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 app = Flask(__name__)
+
+# Initialize the database and create tables
+db = init_db()
+print("start create tables...")
+create_tables(db)
+print("finish create tables")
 
 @app.route('/person', methods=['POST'])
 def create_person():
@@ -37,5 +50,14 @@ def get_collection_by_id(collection_id):
         return jsonify(collection), 200
     return jsonify({'error': 'Collection not found'}), 404
 
+@app.route("/", methods=["GET"])
+def render_index():
+    """Serves the index page of the app."""
+    # db = SessionLocal()
+    context = get_index_context()
+    # db.close()
+    return render_template("index_v2.html", **context)
+
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    # app.run(debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

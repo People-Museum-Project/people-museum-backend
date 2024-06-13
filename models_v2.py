@@ -1,13 +1,10 @@
-# models.py
+from sqlalchemy import Column, Integer, String, Boolean, Text, ARRAY
+from db import Base
 
-from sqlalchemy import ARRAY, Boolean, Column, Integer, String, ForeignKey, Text
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
 
 class Person(Base):
-    __tablename__ = 'person'
+    __tablename__ = 'Person'
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
     image = Column(String(255))
@@ -19,8 +16,10 @@ class Person(Base):
     share_list = Column(ARRAY(Integer))
     is_public = Column(Boolean, default=False)
 
+
 class PeopleCollection(Base):
-    __tablename__ = 'people_collection'
+    __tablename__ = 'PeopleCollection'
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
     image = Column(String(255))
@@ -30,5 +29,3 @@ class PeopleCollection(Base):
     owner = Column(Integer)
     share_list = Column(ARRAY(Integer))
     is_public = Column(Boolean, default=False)
-
-# Define other tables similarly
