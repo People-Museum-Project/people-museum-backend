@@ -2,7 +2,7 @@ import os
 import sys
 from flask import Flask, request, jsonify, render_template
 from database import add_person, add_collection, get_person, get_collection, get_index_context
-from db import init_db, SessionLocal
+from db import init_db
 from create_tables import create_tables
 
 # Ensure the current directory is in the Python path
