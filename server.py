@@ -33,6 +33,13 @@ def getUserByUserId():
     else:
         return jsonify({"message": "User doesn't exist"}), 404
 
+@app.route("/listUsers", methods=["GET"])
+def listUsers():
+    users = handler.getAllUsers()
+    return jsonify({
+        "message": "Users retrieved successfully",
+        "data": users
+    }), 200
 
 @app.route("/updateUser", methods=["PUT"])
 def updateUserByUserId():
@@ -83,11 +90,10 @@ def getPersonListByUserId():
 def getPersonByPersonId():
     data = request.get_json()
     person = handler.getPersonByPersonId(
-        data['userId'],
         data['personId']
     )
     if person:
-        return jsonify({"message": "Person retrieved successfully"}), 200
+        return jsonify({"message": "Person retrieved successfully", "person": person}), 200
     else:
         return jsonify({"message": "Person not found"}), 404
 
@@ -96,7 +102,6 @@ def getPersonByPersonId():
 def updatePersonByPersonId():
     data = request.get_json()
     updated = handler.updatePersonByPersonId(
-        data['userId'],
         data['personId'],
         data['newName'],
         data['newImageLink'],
@@ -114,7 +119,6 @@ def updatePersonByPersonId():
 def deletePersonByPersonId():
     data = request.get_json()
     handler.deletePersonByPersonId(
-        data['userId'],
         data['personId']
     )
     return jsonify({"message": "Person deleted successfully"}), 200
@@ -139,15 +143,14 @@ def getCollectionListByUserId():
     data = request.get_json()
     return jsonify({
         "message": f"Collections of user [{data.get('userId')}]",
-        "data": [collection for collection in handler.getCollectionList(data.get('userId'))]
+        "data": [collection for collection in handler.getCollectionListByUserId(data.get('userId'))]
     }), 200
 
 
 @app.route("/getCollection", methods=["POST"])
 def getCollectionById():
     data = request.get_json()
-    collection = handler.getCollectionByName(
-        data['userId'],
+    collection = handler.getCollectionById(
         data['collectionId']
     )
     return jsonify({
@@ -160,7 +163,6 @@ def getCollectionById():
 def updateCollectionById():
     data = request.get_json()
     updated = handler.updateCollectionById(
-        data['userId'],
         data['collectionId'],
         data['newName'],
         data['newImageLink'],
@@ -177,7 +179,6 @@ def updateCollectionById():
 def deleteCollectionById():
     data = request.get_json()
     handler.deleteCollectionById(
-        data['userId'],
         data['collectionId']
     )
 

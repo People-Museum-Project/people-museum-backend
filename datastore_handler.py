@@ -39,10 +39,14 @@ class Handler:
         self.__client.put(user)
 
     def getUserByUserId(self, userId):
+        key = self.__client.key(self.__user, int(userId))
+        user = self.__client.get(key)
+        return user
+
+    def getAllUsers(self):
         query = self.__client.query(kind=self.__user)
-        query.add_filter('id', '=', userId)
-        user = query.fetch()
-        return user[0] if user else None
+        users = list(query.fetch())
+        return users
 
     def updateUserByUserId(self, userId, newName, newImageLink, newDescription):
         user = self.getUserByUserId(userId)
@@ -84,13 +88,13 @@ class Handler:
             yield person
 
     # TODO: authorization to be added
-    def getPersonByPersonId(self, userId, personId):
-        key = self.__client.key(self.__user, userId, self.__person, personId)
+    def getPersonByPersonId(self, personId):
+        key = self.__client.key(self.__person, int(personId))
         person = self.__client.get(key)
         return person
 
-    def updatePersonByPersonId(self, userId, personId, newName, newImageLink, newDescription, newContext, newPublic):
-        person = self.getPersonByPersonId(userId, personId)
+    def updatePersonByPersonId(self, personId, newName, newImageLink, newDescription, newContext, newPublic):
+        person = self.getPersonByPersonId(personId)
         # person not found, update failed
         if not person:
             return False
@@ -107,8 +111,8 @@ class Handler:
         self.__client.put(person)
         return True
 
-    def deletePersonByPersonId(self, userId, personId):
-        person = self.getPersonByPersonId(userId, personId)
+    def deletePersonByPersonId(self, personId):
+        person = self.getPersonByPersonId(personId)
         if not person:
             return True
         self.__client.delete(person)
@@ -132,13 +136,13 @@ class Handler:
         for collection in query.fetch():
             yield collection
 
-    def getCollectionById(self, userId, collectionId):
-        key = self.__client.key(self.__user, userId, self.__collection, collectionId)
+    def getCollectionById(self, collectionId):
+        key = self.__client.key(self.__collection, int(collectionId))
         collection = self.__client.get(key)
         return collection
 
-    def updateCollectionById(self, userId, collectionId, newName, newImageLink, newDescription, newIsPublic):
-        collection = self.getCollectionById(userId, collectionId)
+    def updateCollectionById(self, collectionId, newName, newImageLink, newDescription, newIsPublic):
+        collection = self.getCollectionById(int(collectionId))
         # collection not found
         if not collection:
             return False
@@ -154,8 +158,8 @@ class Handler:
         self.__client.put(collection)
         return True
 
-    def deleteCollectionById(self, userId, collectionId):
-        collection = self.getCollectionById(userId, collectionId)
+    def deleteCollectionById(self, collectionId):
+        collection = self.getCollectionById(int(collectionId))
         if not collection:
             return True
         self.__client.delete(collection)
