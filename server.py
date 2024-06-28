@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 from datastore_handler import Handler
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 handler = Handler()
 
 
