@@ -24,7 +24,7 @@ def addUser():
 
 
 @app.route("/getUser", methods=["POST"])
-def getUserByUserId():
+def getUser():
     data = request.get_json()
     user = handler.getUserByUserId(data['userId'])
     if user:
@@ -44,7 +44,7 @@ def listUsers():
     }), 200
 
 @app.route("/updateUser", methods=["PUT"])
-def updateUserByUserId():
+def updateUser():
     data = request.get_json()
     updated = handler.updateUserByUserId(
         data["userId"],
@@ -59,7 +59,7 @@ def updateUserByUserId():
 
 
 @app.route("/deleteUser", methods=["DELETE"])
-def deleteUserByUserId():
+def deleteUser():
     data = request.get_json()
     deleted = handler.deleteUserByUserId(data["userId"])
     if deleted:
@@ -81,7 +81,7 @@ def addPerson():
 
 
 @app.route("/getPersonList", methods=['POST'])
-def getPersonListByUserId():
+def getPersonList():
     data = request.get_json()
     return jsonify({
         "message": f"PersonList of user [{data['userId']}] retrieved successfully",
@@ -89,7 +89,7 @@ def getPersonListByUserId():
     }), 200
 
 @app.route("/getPerson", methods=['POST'])
-def getPersonByPersonId():
+def getPerson():
     data = request.get_json()
     person = handler.getPersonByPersonId(
         data['personId']
@@ -101,7 +101,7 @@ def getPersonByPersonId():
 
 
 @app.route("/updatePerson", methods=["PUT"])
-def updatePersonByPersonId():
+def updatePerson():
     data = request.get_json()
     updated = handler.updatePersonByPersonId(
         data['personId'],
@@ -118,7 +118,7 @@ def updatePersonByPersonId():
 
 
 @app.route("/deletePerson", methods=["DELETE"])
-def deletePersonByPersonId():
+def deletePerson():
     data = request.get_json()
     handler.deletePersonByPersonId(
         data['personId']
@@ -141,7 +141,7 @@ def addCollection():
 
 
 @app.route("/getCollectionList", methods=["POST"])
-def getCollectionListByUserId():
+def getCollectionList():
     data = request.get_json()
     return jsonify({
         "message": f"Collections of user [{data.get('userId')}]",
@@ -150,7 +150,7 @@ def getCollectionListByUserId():
 
 
 @app.route("/getCollection", methods=["POST"])
-def getCollectionById():
+def getCollection():
     data = request.get_json()
     collection = handler.getCollectionById(
         data['collectionId']
@@ -162,7 +162,7 @@ def getCollectionById():
 
 
 @app.route("/updateCollection", methods=["PUT"])
-def updateCollectionById():
+def updateCollection():
     data = request.get_json()
     updated = handler.updateCollectionById(
         data['collectionId'],
@@ -178,7 +178,7 @@ def updateCollectionById():
 
 
 @app.route("/deleteCollection", methods=["DELETE"])
-def deleteCollectionById():
+def deleteCollection():
     data = request.get_json()
     handler.deleteCollectionById(
         data['collectionId']
