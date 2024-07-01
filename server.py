@@ -20,7 +20,7 @@ def addUser():
         data['imageLink'],
         data['description']
     )
-    return jsonify({"message": "New user created successfully"}), 200
+    return jsonify({"message": "New user created successfully", "data": data}), 200
 
 
 @app.route("/getUser", methods=["POST"])
@@ -77,7 +77,7 @@ def addPerson():
         data["context"],
         data["public"]
     )
-    return jsonify({"message": "Person created successfully"}), 200
+    return jsonify({"message": "Person created successfully", "data": data}), 200
 
 
 @app.route("/getPersonList", methods=['POST'])
