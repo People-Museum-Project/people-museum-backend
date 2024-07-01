@@ -1,0 +1,29 @@
+indexes:
+
+- kind: Collection
+  properties:
+  - name: userId
+    direction: asc
+  - name: name
+    direction: asc
+
+- kind: Collection
+  properties:
+  - name: userId
+    direction: asc
+  - name: name
+    direction: desc
+
+- kind: Person
+  properties:
+  - name: collectionId
+    direction: asc
+  - name: name
+    direction: asc
+
+- kind: Person
+  properties:
+  - name: collectionId
+    direction: asc
+  - name: name
+    direction: desc
