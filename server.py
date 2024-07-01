@@ -75,6 +75,8 @@ def addPerson():
         data["imageLink"],
         data["description"],
         data["context"],
+        data["userId"],
+        data["collectionId"],
         data["public"]
     )
     return jsonify({"message": "Person created successfully", "data": data}), 200
@@ -87,6 +89,21 @@ def getPersonList():
         "message": f"PersonList of user [{data['userId']}] retrieved successfully",
         "data": [person for person in handler.getPersonListByUserId(data['userId'])]
     }), 200
+
+
+@app.route("/getPersonListByCollection", methods=['POST'])
+def getPersonListByCollection():
+    data = request.get_json()
+    collectionId = data['collectionId']
+    sortBy = data['sortBy']
+    order = data['order']
+    limit = data['limit']
+    page = data['page']
+    return jsonify({
+        "message": f"Person list of collection {collectionId} retrieved successfully",
+        "data": [person for person in handler.getPersonListByCollectionId(collectionId, sortBy, order, page, limit)]
+    }), 200
+
 
 @app.route("/getPerson", methods=['POST'])
 def getPerson():
@@ -143,9 +160,15 @@ def addCollection():
 @app.route("/getCollectionList", methods=["POST"])
 def getCollectionList():
     data = request.get_json()
+    userId = data.get('userId')
+    page = data['page']
+    limit = data['limit']
+    sortBy = data['sortBy']
+    order = data['order']
+
     return jsonify({
         "message": f"Collections of user [{data.get('userId')}]",
-        "data": [collection for collection in handler.getCollectionListByUserId(data.get('userId'))]
+        "data": [collection for collection in handler.getCollectionListByUserId(userId, sortBy, order, page, limit)]
     }), 200
 
 
