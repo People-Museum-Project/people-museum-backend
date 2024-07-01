@@ -1,7 +1,7 @@
 
 from google.cloud import datastore
 
-from datastore_client import Client
+from people_museum_client import Client
 
 
 # UID will auto POST without detected by users
