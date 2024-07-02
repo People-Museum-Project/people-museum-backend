@@ -70,7 +70,7 @@ class Handler:
         self.__client.delete(user)
         return True
 
-    def addPerson(self, name, imageLink, description, context, public=0):
+    def addPerson(self, name, imageLink, description, context, userId, collectionId=None, public=0):
         # userId, name, image, description, context, public/private
         key = self.__client.key(self.__person)
         person = datastore.Entity(key=key)
@@ -78,7 +78,9 @@ class Handler:
         person['imageLink'] = imageLink
         person['description'] = description
         person['context'] = context
+        person['userId'] = userId
         person['public'] = public
+        person['collectionId'] = collectionId
         self.__client.put(person)
 
     def getPersonListByUserId(self, userId):
@@ -86,6 +88,19 @@ class Handler:
         query.add_filter('id', '=', userId)
         for person in query.fetch():
             yield person
+
+    def getPersonListByCollectionId(self, collectionId, sortBy, order, page, limit):
+        query = self.__client.query(kind=self.__person)
+        query.add_filter('collectionId', '=', collectionId)
+
+        if order == 'asc':
+            query.order = sortBy
+        else:
+            query.order = ['-' + sortBy]
+
+        for collection in query.fetch(limit=limit, offset=(page - 1) * limit):
+            yield collection
+
 
     # TODO: authorization to be added
     def getPersonByPersonId(self, personId):
@@ -130,10 +145,16 @@ class Handler:
         collection['isPublic'] = isPublic
         self.__client.put(collection)
 
-    def getCollectionListByUserId(self, userId):
+    def getCollectionListByUserId(self, userId, sortBy, order, page, limit):
         query = self.__client.query(kind=self.__collection)
+
+        if order == 'asc':
+            query.order = sortBy
+        else:
+            query.order = ['-' + sortBy]
+
         query.add_filter('userId', "=", userId)
-        for collection in query.fetch():
+        for collection in query.fetch(limit=limit, offset=(page - 1) * limit):
             yield collection
 
     def getCollectionById(self, collectionId):
