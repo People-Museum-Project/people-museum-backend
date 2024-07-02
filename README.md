@@ -7,29 +7,43 @@ The People Museum app empowers ordinary people-- not just coders-- to create gen
 [check out](API-doc.md)
 
 ##  Backend set up
+
+### make a backend directory
 ```commandline
-# make a backend directory
 mkdir peopleClient
 cd peopleClient
+```
 
-# create conda environment
+### create conda environment
+```commandline
 conda env list
 conda create -n pplmuseum python=3.11
 conda activate pplmuseum
+```
 
-# clone the backend repo
+### clone the backend repo
+```commandline
 git clone https://github.com/People-Museum-Project/people-museum-backend.git
+```
 
-# install the requirement of basic backend library
+### install the requirement of basic backend library
+```commandline
 cd people-museum-backend
 pip3 install -r requirement.txt
+```
 
-# install the GCP datastore library
+### install the GCP datastore library
+```commandline
 pip install google-cloud-datastore
+```
 
-# Add enviroment variable
+### Add enviroment variable
+```commandline
 export PROJECT="peoplemuseumyeah"
 export GOOGLE_APPLICATION_CREDENTIALS=/your_path_to_GCP_credential_file/peoplemuseumyeah-18378c2ff07f.json
+```
 
+### Run the server
+```commandline
 python server.py
 ```
