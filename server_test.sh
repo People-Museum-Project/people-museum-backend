@@ -15,7 +15,7 @@ echo -e "\n"
 # Test getUser
 echo "Testing getUser..."
 curl -X POST "$BASE_URL/getUser" -H "Content-Type: application/json" -d '{
-  "userId": 1
+  "userId": "1"
 }'
 echo -e "\n"
 
@@ -27,7 +27,7 @@ echo -e "\n"
 # Test updateUser
 echo "Testing updateUser..."
 curl -X PUT "$BASE_URL/updateUser" -H "Content-Type: application/json" -d '{
-  "userId": 1,
+  "userId": "1",
   "name": "Jane Doe",
   "imageLink": "http://example.com/newimage.jpg",
   "description": "Updated description"
@@ -37,7 +37,7 @@ echo -e "\n"
 # Test deleteUser
 echo "Testing deleteUser..."
 curl -X DELETE "$BASE_URL/deleteUser" -H "Content-Type: application/json" -d '{
-  "userId": 1
+  "userId": "1"
 }'
 echo -e "\n"
 
@@ -57,7 +57,7 @@ echo -e "\n"
 # Test getPersonList
 echo "Testing getPersonList..."
 curl -X POST "$BASE_URL/getPersonList" -H "Content-Type: application/json" -d '{
-  "userId": 1
+  "userId": "1"
 }'
 echo -e "\n"
 
@@ -75,14 +75,14 @@ echo -e "\n"
 # Test getPerson
 echo "Testing getPerson..."
 curl -X POST "$BASE_URL/getPerson" -H "Content-Type: application/json" -d '{
-  "personId": 1
+  "personId": "1"
 }'
 echo -e "\n"
 
 # Test updatePerson
 echo "Testing updatePerson..."
 curl -X PUT "$BASE_URL/updatePerson" -H "Content-Type: application/json" -d '{
-  "personId": 1,
+  "personId": "1",
   "newName": "Bob",
   "newImageLink": "http://example.com/newperson.jpg",
   "newDescription": "Updated person description",
@@ -101,7 +101,7 @@ echo -e "\n"
 # Test addCollection
 echo "Testing addCollection..."
 curl -X POST "$BASE_URL/addCollection" -H "Content-Type: application/json" -d '{
-  "userId": 1,
+  "userId": "1",
   "name": "My Collection",
   "imageLink": "http://example.com/collection.jpg",
   "description": "A new collection",
@@ -112,7 +112,7 @@ echo -e "\n"
 # Test getCollectionList
 echo "Testing getCollectionList..."
 curl -X POST "$BASE_URL/getCollectionList" -H "Content-Type: application/json" -d '{
-  "userId": 1,
+  "userId": "1",
   "page": 1,
   "limit": 10,
   "sortBy": "name",

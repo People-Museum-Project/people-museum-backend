@@ -85,7 +85,7 @@ class Handler:
 
     def getPersonListByUserId(self, userId):
         query = self.__client.query(kind=self.__person)
-        query.add_filter('id', '=', userId)
+        query.add_filter('userId', '=', userId)
         for person in query.fetch():
             yield person
 
