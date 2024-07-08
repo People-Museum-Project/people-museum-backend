@@ -1,0 +1,5 @@
+# Exclude directories
+fast-mongodb/
+flask-gcp/
+.git/
+__pycache__/

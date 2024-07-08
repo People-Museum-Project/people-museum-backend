@@ -8,7 +8,6 @@ class Client:
     def __init__(self):
         # Set the path to service account key file
         self.__project_name = os.environ["PROJECT"]
-        self.__credentials = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
     def connect(self):
         # Initialize the Datastore client

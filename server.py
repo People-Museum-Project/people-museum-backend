@@ -17,7 +17,9 @@ app.register_blueprint(ai_bp, url_prefix='/ai')
 def index():
     return jsonify({"message": "index page successfully reached"}), 200
 
-
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy"}), 200
 
 
 if __name__ == "__main__":
