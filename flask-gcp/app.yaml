@@ -1,8 +1,0 @@
-runtime: python310
-instance_class: f1
-
-# entrypoint: gunicorn -b main:app
-
-# handlers:
-# - url: /.*
-#   script: auto
