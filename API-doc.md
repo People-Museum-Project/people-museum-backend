@@ -4,7 +4,9 @@ This documentation provides details on the endpoints available in the People Mus
 
 ## Base URL
 
-The base URL for accessing the API endpoints is currently in local environment: `http://127.0.0.1:8080/`
+The base URL for accessing the API endpoints:
+- **Online environment: `https://peoplemuseumyeah.uc.r.appspot.com/db`**
+- **Local environment: `http://127.0.0.1:8080/`**
 
 ## Endpoints
 
