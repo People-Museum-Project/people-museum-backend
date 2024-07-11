@@ -1,25 +1,10 @@
 
 from google.cloud import datastore
 
-from people_museum_client import Client
+from app.people_museum_client import Client
 
 
 # UID will auto POST without detected by users
-
-
-"""
-
-Person
-
-userId, name, image, description, context, public/private
-
-User
-userId, name, image, description, favourite
-
-Collection
-userId, name, image, description, public/private
-
-"""
 
 
 class Handler:

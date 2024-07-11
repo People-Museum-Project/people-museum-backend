@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 
-from people_museum_handler import Handler
-
+from app.people_museum_handler import Handler
 
 datastore_bp = Blueprint('datastore_bp', __name__)
 handler = Handler()
