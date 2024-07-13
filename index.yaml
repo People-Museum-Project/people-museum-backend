@@ -27,3 +27,18 @@ indexes:
     direction: asc
   - name: name
     direction: desc
+
+- kind: Person
+  properties:
+  - name: userId
+    direction: asc
+  - name: name
+    direction: asc
+
+- kind: Person
+  properties:
+  - name: userId
+    direction: asc
+  - name: name
+    direction: desc
+
