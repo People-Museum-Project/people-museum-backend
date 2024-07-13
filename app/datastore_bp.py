@@ -160,9 +160,14 @@ def getCollectionList():
     sortBy = data['sortBy']
     order = data['order']
 
+    results = []
+    for collection in handler.getCollectionListByUserId(userId, sortBy, order, page, limit):
+        collection['id'] = collection.key.id_or_name
+        results.append(collection)
+
     return jsonify({
         "message": f"Collections of user [{data.get('userId')}]",
-        "data": [collection for collection in handler.getCollectionListByUserId(userId, sortBy, order, page, limit)]
+        "data": results
     }), 200
 
 
