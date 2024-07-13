@@ -68,10 +68,16 @@ class Handler:
         person['collectionId'] = collectionId
         self.__client.put(person)
 
-    def getPersonListByUserId(self, userId):
+    def getPersonListByUserId(self, userId, sortBy, order, page, limit):
         query = self.__client.query(kind=self.__person)
         query.add_filter('userId', '=', userId)
-        for person in query.fetch():
+
+        if order == 'asc':
+            query.order = sortBy
+        else:
+            query.order = ['-' + sortBy]
+
+        for person in query.fetch(limit=limit, offset=(page - 1) * limit):
             yield person
 
     def getPersonListByCollectionId(self, collectionId, sortBy, order, page, limit):
