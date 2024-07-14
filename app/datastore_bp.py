@@ -70,7 +70,6 @@ def addPerson():
         data["description"],
         data["context"],
         data["userId"],
-        data["collectionId"],
         data["public"]
     )
     return jsonify({"message": "Person created successfully", "data": data}), 200
@@ -95,12 +94,13 @@ def getPersonListByCollection():
     data = request.get_json()
     collectionId = data['collectionId']
     sortBy = data['sortBy']
-    order = data['order']
+    ascending = data['ascending']
     limit = data['limit']
     page = data['page']
+    print("<<<<<", data)
     return jsonify({
         "message": f"Person list of collection {collectionId} retrieved successfully",
-        "data": [person for person in handler.getPersonListByCollectionId(collectionId, sortBy, order, page, limit)]
+        "data": [person for person in handler.getPersonListByCollectionId(collectionId, page, limit, sortBy=sortBy, ascending=ascending)]
     }), 200
 
 
@@ -212,3 +212,16 @@ def deleteCollection():
     )
 
     return jsonify({"message": "Collection deleted successfully"}), 200
+
+
+@datastore_bp.route("/addPersonCollection", methods=["POST"])
+def addPersonCollection():
+    data = request.get_json()
+    add = handler.addPersonCollection(
+        data['personId'],
+        data['collectionId']
+    )
+    if add:
+        return jsonify({"message": "person added to collection successfully"}), 200
+    else:
+        return jsonify({"message": "addition failed"}), 400

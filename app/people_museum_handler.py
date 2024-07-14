@@ -65,7 +65,6 @@ class Handler:
         person['context'] = context
         person['userId'] = userId
         person['public'] = public
-        person['collectionId'] = collectionId
         self.__client.put(person)
 
     def getPersonListByUserId(self, userId, sortBy, order, page, limit):
@@ -80,18 +79,28 @@ class Handler:
         for person in query.fetch(limit=limit, offset=(page - 1) * limit):
             yield person
 
-    def getPersonListByCollectionId(self, collectionId, sortBy, order, page, limit):
-        query = self.__client.query(kind=self.__person)
+
+    def getPersonKeysByCollectionId(self, collectionId):
+        query = self.__client.query(kind='PersonCollection')
         query.add_filter('collectionId', '=', collectionId)
+        results = query.fetch()
+        return [entity['personId'] for entity in results]
 
-        if order == 'asc':
-            query.order = sortBy
-        else:
-            query.order = ['-' + sortBy]
+    def getPersonListByCollectionId(self, collectionId, page, limit, sortBy="name", ascending=True):
+        personIds = self.getPersonKeysByCollectionId(collectionId)
 
-        for collection in query.fetch(limit=limit, offset=(page - 1) * limit):
-            yield collection
+        keys = [self.__client.key('Person', personId) for personId in personIds]
 
+        persons = self.__client.get_multi(keys)
+
+        sorted_persons = sorted(persons, key=lambda x: x[sortBy], reverse=not ascending)
+
+        start = (page - 1) * limit
+        end = start + limit
+        paginated_persons = sorted_persons[start:end]
+
+        for person in paginated_persons:
+            yield person
 
     # TODO: authorization to be added
     def getPersonByPersonId(self, personId):
@@ -177,6 +186,14 @@ class Handler:
         self.__client.delete(collection)
         return True
 
-
+    def addPersonCollection(self, personId, collectionId):
+        personCollectionKey = self.__client.key('PersonCollection')
+        personCollection = datastore.Entity(key=personCollectionKey)
+        personCollection.update({
+            "personId": personId,
+            "collectionId": collectionId
+        })
+        self.__client.put(personCollection)
+        return True
 
 
