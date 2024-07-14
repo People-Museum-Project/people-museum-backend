@@ -42,3 +42,7 @@ indexes:
   - name: name
     direction: desc
 
+- kind: PersonCollection
+  properties:
+    - name: collectionId
+    - name: personId
