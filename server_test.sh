@@ -64,18 +64,18 @@ echo -e "\n"
 # Test getPersonListByCollection
 echo "Testing getPersonListByCollection..."
 curl -X POST "$BASE_URL/getPersonListByCollection" -H "Content-Type: application/json" -d '{
-  "collectionId": "collection1",
+  "collectionId": 5675594515742720,
   "sortBy": "name",
-  "order": "asc",
   "limit": 10,
-  "page": 1
+  "page": 1,
+  "ascending": true
 }'
 echo -e "\n"
 
 # Test getPerson
 echo "Testing getPerson..."
 curl -X POST "$BASE_URL/getPerson" -H "Content-Type: application/json" -d '{
-  "personId": "1"
+  "personId": "5088723339313152"
 }'
 echo -e "\n"
 
@@ -123,7 +123,7 @@ echo -e "\n"
 # Test getCollection
 echo "Testing getCollection..."
 curl -X POST "$BASE_URL/getCollection" -H "Content-Type: application/json" -d '{
-  "collectionId": "collection1"
+  "collectionId": 5675594515742720
 }'
 echo -e "\n"
 
