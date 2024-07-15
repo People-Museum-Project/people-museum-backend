@@ -31,6 +31,9 @@ class Handler:
     def getAllUsers(self):
         query = self.__client.query(kind=self.__user)
         users = list(query.fetch())
+
+        for user in users:
+            user['id'] = user.key.id_or_name
         return users
 
     def updateUserByUserId(self, userId, newName, newImageLink, newDescription):
