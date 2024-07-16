@@ -106,8 +106,10 @@ class Handler:
         end = start + limit
         paginated_persons = sorted_persons[start:end]
 
-        for person in paginated_persons:
-            yield person
+        persons_list = list(paginated_persons)
+        for person in persons_list:
+            person['id'] = person.key.id_or_name
+        return persons_list
 
     # TODO: authorization to be added
     def getPersonByPersonId(self, personId):

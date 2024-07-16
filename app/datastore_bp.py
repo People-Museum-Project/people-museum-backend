@@ -98,9 +98,10 @@ def getPersonListByCollection():
     limit = data['limit']
     page = data['page']
     print("<<<<<", data)
+
     return jsonify({
         "message": f"Person list of collection {collectionId} retrieved successfully",
-        "data": [person for person in handler.getPersonListByCollectionId(collectionId, page, limit, sortBy=sortBy, ascending=ascending)]
+        "data": handler.getPersonListByCollectionId(collectionId, page, limit, sortBy=sortBy, ascending=ascending)
     }), 200
 
 
