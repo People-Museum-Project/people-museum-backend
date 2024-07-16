@@ -79,8 +79,12 @@ class Handler:
         else:
             query.order = ['-' + sortBy]
 
-        for person in query.fetch(limit=limit, offset=(page - 1) * limit):
-            yield person
+        persons = list(query.fetch(limit=limit, offset=(page - 1) * limit))
+
+        # add ID into person
+        for person in persons:
+            person['id'] = person.key.id_or_name
+        return persons
 
 
     def getPersonKeysByCollectionId(self, collectionId):

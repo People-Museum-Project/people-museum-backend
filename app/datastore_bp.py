@@ -84,9 +84,9 @@ def getPersonList():
     page = data['page']
 
     return jsonify({
-        "message": f"PersonList of user [{data['userId']}] retrieved successfully",
-        "data": [person for person in handler.getPersonListByUserId(data['userId'], sortBy, order, page, limit)]
-    }), 200
+            "message": f"PersonList of user [{data['userId']}] retrieved successfully",
+            "data": handler.getPersonListByUserId(data['userId'], sortBy, order, page, limit)
+        }), 200
 
 
 @datastore_bp.route("/getPersonListByCollection", methods=['POST'])
