@@ -46,3 +46,13 @@ indexes:
   properties:
     - name: collectionId
     - name: personId
+
+- kind: Collection
+  properties:
+    - name: userId
+    - name: date
+
+- kind: Person
+  properties:
+    - name: userId
+    - name: date
