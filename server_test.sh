@@ -147,3 +147,29 @@ curl -X DELETE "$BASE_URL/deleteCollection" -H "Content-Type: application/json" 
   "collectionId": 5722267187150848
 }'
 echo -e "\n"
+
+# Test getCollectionListByPerson
+echo "Testing getCollectionListByPerson..."
+curl -X POST "$BASE_URL/getCollectionListByPerson" -H "Content-Type: application/json" -d '{
+  "personId": 5748214695198720,
+  "sortBy": "name",
+  "ascending": true,
+  "limit": 10,
+  "page": 1
+}'
+echo -e "\n"
+
+# Test addPersonCollection
+echo "Testing addPersonCollection..."
+curl -X POST "$BASE_URL/addPersonCollection" -H "Content-Type: application/json" -d '{
+  "personId": 5748214695198720,
+  "collectionId": 5755374237908992
+}'
+echo -e "\n"
+
+# Remove person from collection
+curl -X DELETE "$BASE_URL/deletePersonFromCollection" -H "Content-Type: application/json" -d '{
+    "personId": 5748214695198720,
+    "collectionId": 5755374237908992
+}'
+echo -e "\n"
