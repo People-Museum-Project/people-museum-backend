@@ -240,3 +240,16 @@ def addPersonCollection():
         return jsonify({"message": "person added to collection successfully"}), 200
     else:
         return jsonify({"message": "relation already exists"}), 200
+
+
+@datastore_bp.route("/deletePersonFromCollection", methods=["DELETE"])
+def deletePersonFromCollection():
+    data = request.get_json()
+    deleted = handler.deletePersonFromCollection(
+        data['personId'],
+        data['collectionId']
+    )
+    if deleted:
+        return jsonify({"message": "Person removed from collection successfully"}), 200
+    else:
+        return jsonify({"message": "Removal failed"}), 400

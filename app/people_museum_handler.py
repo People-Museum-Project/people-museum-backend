@@ -237,3 +237,11 @@ class Handler:
             # log: already existed
             return False
 
+    def deletePersonFromCollection(self, personId, collectionId):
+        query = self.__client.query(kind='PersonCollection')
+        query.add_filter('personId', '=', personId)
+        query.add_filter('collectionId', '=', collectionId)
+        results = list(query.fetch())
+        for entity in results:
+            self.__client.delete(entity.key)
+        return True
