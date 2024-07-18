@@ -171,6 +171,26 @@ class Handler:
         collection = self.__client.get(key)
         return collection
 
+    def getCollectionKeysByPersonId(self, personId):
+        query = self.__client.query(kind="PersonCollection")
+        query.add_filter('personId', '=', personId)
+        results = query.fetch()
+        return [entity['collectionId'] for entity in results]
+
+    def getCollectionListByPersonId(self, personId, page, limit, sortBy="name", ascending=True):
+        collectionIds = self.getCollectionKeysByPersonId(personId)
+        keys = [self.__client.key('Collection', collectionId) for collectionId in collectionIds]
+        collections = self.__client.get_multi(keys)
+        sorted_collections = sorted(collections, key=lambda x: x[sortBy], reverse=not ascending)
+
+        start = (page - 1) * limit
+        end = start + limit
+        paginated_collections = sorted_collections[start:end]
+        collection_list = list(paginated_collections)
+        for collection in collection_list:
+            collection['id'] = collection.key.id_or_name
+        return collection_list
+
     def updateCollectionById(self, collectionId, newName, newImageLink, newDescription, newIsPublic):
         collection = self.getCollectionById(int(collectionId))
         # collection not found
@@ -196,13 +216,24 @@ class Handler:
         return True
 
     def addPersonCollection(self, personId, collectionId):
-        personCollectionKey = self.__client.key('PersonCollection')
-        personCollection = datastore.Entity(key=personCollectionKey)
-        personCollection.update({
-            "personId": personId,
-            "collectionId": collectionId
-        })
-        self.__client.put(personCollection)
-        return True
+        query = self.__client.query(kind='PersonCollection')
 
+        unique_key = f"{personId}_{collectionId}"
+        query.add_filter('unique', '=', unique_key)
+        existing_entities = list(query.fetch())
+
+        if not existing_entities:
+            personCollectionKey = self.__client.key('PersonCollection')
+            personCollection = datastore.Entity(key=personCollectionKey)
+            personCollection.update({
+                "personId": personId,
+                "collectionId": collectionId,
+                "unique": unique_key
+            })
+            self.__client.put(personCollection)
+            # log: succeed
+            return True
+        else:
+            # log: already existed
+            return False
 

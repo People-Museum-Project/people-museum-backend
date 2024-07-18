@@ -97,7 +97,6 @@ def getPersonListByCollection():
     ascending = data['ascending']
     limit = data['limit']
     page = data['page']
-    print("<<<<<", data)
 
     return jsonify({
         "message": f"Person list of collection {collectionId} retrieved successfully",
@@ -177,6 +176,21 @@ def getCollectionList():
     }), 200
 
 
+@datastore_bp.route("/getCollectionListByPerson", methods=['POST'])
+def getCollectionListByPerson():
+    data = request.get_json()
+    personId = data['personId']
+    sortBy = data['sortBy']
+    ascending = data['ascending']
+    limit = data['limit']
+    page = data['page']
+
+    return jsonify({
+        "message": f"Collection list of person {personId} retrieved successfully",
+        "data": handler.getCollectionListByPersonId(personId, page, limit, sortBy=sortBy, ascending=ascending)
+    }), 200
+
+
 @datastore_bp.route("/getCollection", methods=["POST"])
 def getCollection():
     data = request.get_json()
@@ -225,4 +239,4 @@ def addPersonCollection():
     if add:
         return jsonify({"message": "person added to collection successfully"}), 200
     else:
-        return jsonify({"message": "addition failed"}), 400
+        return jsonify({"message": "relation already exists"}), 200
