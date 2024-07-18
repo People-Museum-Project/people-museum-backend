@@ -95,6 +95,7 @@ The base URL for accessing the API endpoints:
     "imageLink": "string",
     "description": "string",
     "context": "string",
+    "userId": "integer",
     "public": "boolean"
   }
   ```
@@ -108,7 +109,11 @@ The base URL for accessing the API endpoints:
 - **Request Body**:
   ```json
   {
-    "userId": "string"
+    "userId": "string",
+    "sortBy": "string",
+    "ascending": "boolean",
+    "limit": "integer",
+    "page": "integer"
   }
   ```
 - **Response**:
@@ -184,7 +189,11 @@ The base URL for accessing the API endpoints:
 - **Request Body**:
   ```json
   {
-    "userId": "string"
+    "userId": "integer",
+    "page": "integer",
+    "limit": "integer",
+    "sortBy": "string",
+    "ascending": "boolean"
   }
   ```
 - **Response**:
@@ -197,7 +206,7 @@ The base URL for accessing the API endpoints:
 - **Request Body**:
   ```json
   {
-    "collectionId": "string"
+    "collectionId": "integer"
   }
   ```
 - **Response**:
