@@ -1,10 +1,11 @@
+import time
 
 from google.cloud import datastore
 
 from app.people_museum_client import Client
 
 
-# UID will auto POST without detected by users
+
 
 
 class Handler:
@@ -13,6 +14,7 @@ class Handler:
         self.__collection = "Collection"
         self.__user = "User"
         self.__person = "Person"
+        self.__PST_OFFSET = -7 * 60 * 60
 
     def addUser(self, name, imageLink, description="", favourite=None):
         key = self.__client.key(self.__user)
@@ -58,8 +60,7 @@ class Handler:
         self.__client.delete(user)
         return True
 
-    def addPerson(self, name, imageLink, description, context, userId, collectionId=None, public=0):
-        # userId, name, image, description, context, public/private
+    def addPerson(self, name, imageLink, description, context, userId, public=0):
         key = self.__client.key(self.__person)
         person = datastore.Entity(key=key)
         person['name'] = name
@@ -68,16 +69,15 @@ class Handler:
         person['context'] = context
         person['userId'] = userId
         person['public'] = public
+        person['date'] = int(time.time()) + self.__PST_OFFSET
         self.__client.put(person)
 
-    def getPersonListByUserId(self, userId, sortBy, order, page, limit):
+    def getPersonListByUserId(self, userId, page, limit, sortBy='name', ascending=True):
         query = self.__client.query(kind=self.__person)
+
         query.add_filter('userId', '=', userId)
 
-        if order == 'asc':
-            query.order = sortBy
-        else:
-            query.order = ['-' + sortBy]
+        query.order = sortBy if ascending else ['-' + sortBy]
 
         persons = list(query.fetch(limit=limit, offset=(page - 1) * limit))
 
@@ -85,7 +85,6 @@ class Handler:
         for person in persons:
             person['id'] = person.key.id_or_name
         return persons
-
 
     def getPersonKeysByCollectionId(self, collectionId):
         query = self.__client.query(kind='PersonCollection')
@@ -151,16 +150,14 @@ class Handler:
         collection['name'] = name
         collection['imageLink'] = imageLink
         collection['description'] = description
+        collection['date'] = int(time.time()) + self.__PST_OFFSET
         collection['isPublic'] = isPublic
         self.__client.put(collection)
 
-    def getCollectionListByUserId(self, userId, sortBy, order, page, limit):
+    def getCollectionListByUserId(self, userId, page, limit, sortBy='name', ascending=True):
         query = self.__client.query(kind=self.__collection)
 
-        if order == 'asc':
-            query.order = sortBy
-        else:
-            query.order = ['-' + sortBy]
+        query.order = sortBy if ascending else ['-' + sortBy]
 
         query.add_filter('userId', "=", userId)
         for collection in query.fetch(limit=limit, offset=(page - 1) * limit):

@@ -61,6 +61,7 @@ def deleteUser():
     else:
         return jsonify({"message": "User deleted failed, user not found"}), 404
 
+
 @datastore_bp.route("/addPerson", methods=["POST"])
 def addPerson():
     data = request.get_json()
@@ -78,21 +79,22 @@ def addPerson():
 @datastore_bp.route("/getPersonList", methods=['POST'])
 def getPersonList():
     data = request.get_json()
+    userId = int(data['userId'])
     sortBy = data['sortBy']
-    order = data['order']
+    ascending = data['ascending']
     limit = data['limit']
     page = data['page']
 
     return jsonify({
-            "message": f"PersonList of user [{data['userId']}] retrieved successfully",
-            "data": handler.getPersonListByUserId(data['userId'], sortBy, order, page, limit)
+            "message": f"PersonList of user [{userId}] retrieved successfully",
+            "data": handler.getPersonListByUserId(userId, page, limit, sortBy, ascending)
         }), 200
 
 
 @datastore_bp.route("/getPersonListByCollection", methods=['POST'])
 def getPersonListByCollection():
     data = request.get_json()
-    collectionId = data['collectionId']
+    collectionId = int(data['collectionId'])
     sortBy = data['sortBy']
     ascending = data['ascending']
     limit = data['limit']
@@ -159,14 +161,14 @@ def addCollection():
 @datastore_bp.route("/getCollectionList", methods=["POST"])
 def getCollectionList():
     data = request.get_json()
-    userId = data.get('userId')
+    userId = data['userId']
     page = data['page']
     limit = data['limit']
     sortBy = data['sortBy']
-    order = data['order']
+    ascending = data['ascending']
 
     results = []
-    for collection in handler.getCollectionListByUserId(userId, sortBy, order, page, limit):
+    for collection in handler.getCollectionListByUserId(userId, page, limit, sortBy, ascending):
         collection['id'] = collection.key.id_or_name
         results.append(collection)
 
