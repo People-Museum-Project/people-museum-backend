@@ -15,11 +15,11 @@ class Assistant:
         self.__settings = {"model": DEFAULT_MODEL}
         self.__person_id = person_id
 
-        # try to retrieve the previous conversation
-        self.__assistant_id = get_assistant(self.__person_id)
-        if not self.__assistant_id:
-            # get context and send to chat
-            pass
+        # # try to retrieve the previous conversation
+        # self.__assistant_id = get_assistant(self.__person_id)
+        # if not self.__assistant_id:
+        #     # get context and send to chat
+        #     pass
 
     def __set_context(self):
         # telling the AI the incoming conversation is based on this context
