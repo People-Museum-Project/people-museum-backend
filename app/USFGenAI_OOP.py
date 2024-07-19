@@ -21,7 +21,6 @@ class Assistant:
             # get context and send to chat
             pass
 
-
     def __set_context(self):
         # telling the AI the incoming conversation is based on this context
         # ask_xxx(context)
@@ -107,9 +106,9 @@ class Assistant:
             return self.__generate_assistant_prompts(context, instructions, assistant_id)
         else:
             response = self.__client.chat.completions.create(model=self.__settings["model"], messages=[
-                                                          {"role": "system", "content": instructions},
-                                                          {"role": "user", "content": context}
-                                                      ])
+                {"role": "system", "content": instructions},
+                {"role": "user", "content": context}
+            ])
             (dict(response).get('usage'))
             (response.model_dump_json(indent=2))
             prompts = response.choices[0].message.content.strip().split('\n')
@@ -206,7 +205,8 @@ class Assistant:
                     for index, annotation in enumerate(annotations):
                         if file_citation := getattr(annotation, "file_citation", None):
                             cited_file = self.__client.files.retrieve(file_citation.file_id)
-                            latest_message = latest_message.replace(annotation.text, f"[{index}]({cited_file.filename})")
+                            latest_message = latest_message.replace(annotation.text,
+                                                                    f"[{index}]({cited_file.filename})")
                             latest_message += f"\n[{index}] {cited_file.filename}"
 
             if latest_message:
@@ -287,52 +287,48 @@ class Assistant:
         else:
             return []
 
+    def text_to_speech(self, text, voice=None):
+        """
+        Converts text to speech using OpenAI's TTS model.
 
+        Args:
+            text (str): The text to convert to speech.
+            voice: The voice to use.
 
-# def text_to_speech(text, voice=None):
-#     """
-#     Converts text to speech using OpenAI's TTS model.
-#
-#     Args:
-#         text (str): The text to convert to speech.
-#         voice: The voice to use.
-#
-#     Returns:
-#         object: The response object from OpenAI audio API.
-#     """
-#     if not voice:
-#         voice = "alloy"
-#     try:
-#         speech_file_path = Path(__file__).parent / "speech.mp3"
-#         response = client.audio.speech.create(
-#             model="tts-1",
-#             voice=voice,
-#             input=text
-#         )
-#         response.stream_to_file(speech_file_path)
-#         return response.content
-#     except Exception as e:
-#         print(f"Error converting text to speech: {e}")
-#         return None
-#
-#
-# def speech_recognition(file):
-#     """
-#     Converts speech to text using OpenAI's Whisper model.
-#
-#     Args:
-#         file (str): Path to the audio file.
-#
-#     Returns:
-#         str: The transcribed text.
-#     """
-#     with open(file, "rb") as audio_file:
-#         translation = client.audio.translations.create(
-#             model="whisper-1",
-#             file=audio_file
-#         )
-#     return translation.text
+        Returns:
+            object: The response object from OpenAI audio API.
+        """
+        if not voice:
+            voice = "alloy"
+        try:
+            speech_file_path = Path(__file__).parent / "speech.mp3"
+            response = self.__client.audio.speech.create(
+                model="tts-1",
+                voice=voice,
+                input=text
+            )
+            response.stream_to_file(speech_file_path)
+            return response.content
+        except Exception as e:
+            print(f"Error converting text to speech: {e}")
+            return None
 
+    def speech_recognition(self, file):
+        """
+        Converts speech to text using OpenAI's Whisper model.
+
+        Args:
+            file (str): Path to the audio file.
+
+        Returns:
+            str: The transcribed text.
+        """
+        with open(file, "rb") as audio_file:
+            translation = self.__client.audio.translations.create(
+                model="whisper-1",
+                file=audio_file
+            )
+        return translation.text
 
 
 if __name__ == "__main__":
