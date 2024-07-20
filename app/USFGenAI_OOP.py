@@ -55,21 +55,6 @@ class Assistant:
             return self.__ask_assistant(conversation, question, instructions, assistant_id)
         else:
             return self.__ask_openai(conversation, instructions, question)
-        # # Ensure the instructions are the first message
-        # messages = [{"role": "system", "content": instructions}] + conversation
-        # messages.append({"role": "user", "content": question})
-        #
-        # # Make the API call
-        # response = self.__client.chat.completions.create(
-        #     model=self.__settings["model"],
-        #     messages=messages
-        # )
-        #
-        # # Extract the answer from the response
-        # answer = response.choices[0].message.content.strip()
-        # conversation.append({"role": "assistant", "content": answer})
-        #
-        # return {"reply": answer, "conversation": conversation}
 
     def ask_assistant_question(self, conversation, question, instructions, assistant_id):
         """
