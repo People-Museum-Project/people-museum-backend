@@ -26,11 +26,15 @@ The base URL for accessing the API endpoints:
   {
     "name": "string",
     "imageLink": "string",
-    "description": "string"
+    "description": "string",
+    "favourite": "string",
+    "googleUserId": "string",
+    "gmail": "string"
   }
   ```
 - **Response**:
   - `200 OK`: `{ "message": "New user created successfully", "data": <user data> }`
+  - `409 CONFLICT`: `{"message": "User already exists"}`
 
 ### 3. Get User
 - **Endpoint**: `/getUser`
@@ -39,7 +43,7 @@ The base URL for accessing the API endpoints:
 - **Request Body**:
   ```json
   {
-    "userId": "string"
+    "googleUserId": "string"
   }
   ```
 - **Response**:
