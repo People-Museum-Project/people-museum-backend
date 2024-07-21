@@ -2,7 +2,7 @@ import time
 
 from google.cloud import datastore
 
-from app.people_museum_client import Client
+from app.datastore_client import Client
 
 
 
