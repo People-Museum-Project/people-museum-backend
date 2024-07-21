@@ -5,9 +5,6 @@ from google.cloud import datastore
 from app.datastore_client import Client
 
 
-
-
-
 class Handler:
     def __init__(self):
         self.__client = Client().connect()
@@ -16,19 +13,30 @@ class Handler:
         self.__person = "Person"
         self.__PST_OFFSET = -7 * 60 * 60
 
-    def addUser(self, name, imageLink, description="", favourite=None):
+    def addUser(self, name, imageLink, googleUserId, gmail, description="", favourite=None):
+        # check existence
+        user = self.getUserByUserId(googleUserId)
+        if user:
+            return False
+
         key = self.__client.key(self.__user)
         user = datastore.Entity(key=key)
         user['name'] = name
         user['imageLink'] = imageLink
         user['description'] = description
         user['favourite'] = favourite
+        user['googleUserId'] = googleUserId
+        user['gmail'] = gmail
         self.__client.put(user)
+        return True
 
-    def getUserByUserId(self, userId):
-        key = self.__client.key(self.__user, int(userId))
-        user = self.__client.get(key)
-        return user
+    def getUserByUserId(self, googleUserId):
+        query = self.__client.query(kind=self.__user)
+        query.add_filter('googleUserId', '=', googleUserId)
+        users = list(query.fetch())
+        for user in users:
+            user['id'] = user.key.id_or_name
+        return users
 
     def getAllUsers(self):
         query = self.__client.query(kind=self.__user)

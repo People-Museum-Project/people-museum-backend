@@ -9,18 +9,23 @@ handler = Handler()
 @datastore_bp.route("/addUser", methods=["POST"])
 def addUser():
     data = request.get_json()
-    handler.addUser(
+    result = handler.addUser(
         data['name'],
         data['imageLink'],
-        data['description']
+        data['description'],
+        data['gmail'],
+        data['googleUserId']
     )
-    return jsonify({"message": "New user created successfully", "data": data}), 200
+    if result:
+        return jsonify({"message": "New user created successfully", "data": data}), 200
+    else:
+        return jsonify({"message": "User already exists"}), 409
 
 
 @datastore_bp.route("/getUser", methods=["POST"])
 def getUser():
     data = request.get_json()
-    user = handler.getUserByUserId(data['userId'])
+    user = handler.getUserByUserId(data['googleUserId'])
     if user:
         return jsonify({
             "message": "User retrieved successfully",
