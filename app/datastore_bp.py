@@ -12,9 +12,9 @@ def addUser():
     result = handler.addUser(
         data['name'],
         data['imageLink'],
-        data['description'],
+        data['googleUserId'],
         data['gmail'],
-        data['googleUserId']
+        data['description']
     )
     if result:
         return jsonify({"message": "New user created successfully", "data": data}), 200
