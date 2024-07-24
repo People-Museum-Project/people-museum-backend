@@ -7,19 +7,13 @@ DEFAULT_MODEL = "gpt-3.5-turbo"
 
 class Assistant:
     # each assistant must belong to a person_id
-    def __init__(self, person_id):
+    def __init__(self):
         self.__api_key = os.getenv('OPENAI_API_KEY')
         if not self.__api_key:
             raise Exception("Error: The API key is not set. Set the environment variable 'OPENAI_API_KEY'.")
         self.__client = OpenAI(api_key=self.__api_key)
         self.__settings = {"model": DEFAULT_MODEL}
-        self.__person_id = person_id
 
-        # # try to retrieve the previous conversation
-        # self.__assistant_id = get_assistant(self.__person_id)
-        # if not self.__assistant_id:
-        #     # get context and send to chat
-        #     pass
 
     def __set_context(self):
         # telling the AI the incoming conversation is based on this context

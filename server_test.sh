@@ -60,7 +60,7 @@ curl -X POST "$BASE_URL/db/getPersonList" -H "Content-Type: application/json" -d
   "sortBy": "name",
   "limit": 10,
   "page": 1,
-  "order": "asc"
+  "ascending": true
 }'
 echo -e "\n"
 
@@ -175,9 +175,44 @@ curl -X DELETE "$BASE_URL/db/deletePersonFromCollection" -H "Content-Type: appli
 echo -e "\n"
 
 # AI part
-# GenerateText
+# Test /generateText endpoint
 curl -X POST "$BASE_URL/ai/generateText" -H "Content-Type: application/json" -d '{
   "prompt": "What is the capital of France?",
-  "model": "gpt-3.5-turbo"
+  "model": "gpt-3.5-turbo",
+  "person_id": 1
 }'
 echo -e "\n"
+
+
+# Test /askQuestion endpoint
+curl -X POST "$BASE_URL/ai/askQuestion" -H "Content-Type: application/json" -d '{
+  "conversation": [],
+  "question": "What is the weather usually like in San Francisco?",
+  "instructions": "You are a helpful assistant.",
+  "assistant_id": "asst_ubKwp4KW8cDePhDv7Gf6adf9",
+  "person_id": 1
+}'
+echo -e "\n"
+
+
+# Test /generateSamplePrompts endpoint
+curl -X POST "$BASE_URL/ai/generateSamplePrompts" -H "Content-Type: application/json" -d '{
+  "context": "Discuss the impact of climate change.",
+  "num_samples": 3,
+  "max_words": 50,
+  "assistant_id": "asst_ubKwp4KW8cDePhDv7Gf6adf9",
+  "followups": true,
+  "person_id": 1
+}'
+echo -e "\n"
+
+
+# Test /generateFollowups endpoint
+curl -X POST "$BASE_URL/ai/generateFollowups" -H "Content-Type: application/json" -d '{
+  "question": "What are the causes of global warming?",
+  "response": "Global warming is primarily caused by the increase in greenhouse gases in the atmosphere.",
+  "num_samples": 2,
+  "max_words": 50,
+  "assistant_id": "asst_ubKwp4KW8cDePhDv7Gf6adf9",
+  "person_id": 1
+}'
