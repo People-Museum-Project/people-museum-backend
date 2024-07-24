@@ -64,7 +64,7 @@ The base URL for accessing the API endpoints:
 - **Request Body**:
   ```json
   {
-    "userId": "string",
+    "googleUserId": "string",
     "name": "string",
     "imageLink": "string",
     "description": "string"
@@ -81,7 +81,7 @@ The base URL for accessing the API endpoints:
 - **Request Body**:
   ```json
   {
-    "userId": "string"
+    "googleUserId": "string"
   }
   ```
 - **Response**:
@@ -99,7 +99,7 @@ The base URL for accessing the API endpoints:
     "imageLink": "string",
     "description": "string",
     "context": "string",
-    "userId": "integer",
+    "googleUserId": "integer",
     "public": "boolean"
   }
   ```
@@ -113,7 +113,7 @@ The base URL for accessing the API endpoints:
 - **Request Body**:
   ```json
   {
-    "userId": "string",
+    "googleUserId": "string",
     "sortBy": "string",
     "ascending": "boolean",
     "limit": "integer",
@@ -176,7 +176,7 @@ The base URL for accessing the API endpoints:
 - **Request Body**:
   ```json
   {
-    "userId": "string",
+    "googleUserId": "string",
     "name": "string",
     "imageLink": "string",
     "description": "string",
@@ -193,7 +193,7 @@ The base URL for accessing the API endpoints:
 - **Request Body**:
   ```json
   {
-    "userId": "integer",
+    "googleUserId": "integer",
     "page": "integer",
     "limit": "integer",
     "sortBy": "string",

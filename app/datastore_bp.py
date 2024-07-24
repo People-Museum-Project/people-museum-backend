@@ -46,7 +46,7 @@ def listUsers():
 def updateUser():
     data = request.get_json()
     updated = handler.updateUserByUserId(
-        data["userId"],
+        data["googleUserId"],
         data["name"],
         data["imageLink"],
         data["description"]
@@ -60,7 +60,7 @@ def updateUser():
 @datastore_bp.route("/deleteUser", methods=["DELETE"])
 def deleteUser():
     data = request.get_json()
-    deleted = handler.deleteUserByUserId(data["userId"])
+    deleted = handler.deleteUserByUserId(data["googleUserId"])
     if deleted:
         return jsonify({"message": "User deleted successfully"}), 200
     else:
@@ -75,7 +75,7 @@ def addPerson():
         data["imageLink"],
         data["description"],
         data["context"],
-        data["userId"],
+        data["googleUserId"],
         data["public"]
     )
     return jsonify({"message": "Person created successfully", "data": data}), 200
@@ -84,7 +84,7 @@ def addPerson():
 @datastore_bp.route("/getPersonList", methods=['POST'])
 def getPersonList():
     data = request.get_json()
-    userId = int(data['userId'])
+    userId = data['googleUserId']
     sortBy = data['sortBy']
     ascending = data['ascending']
     limit = data['limit']
@@ -153,7 +153,7 @@ def deletePerson():
 def addCollection():
     data = request.get_json()
     handler.addCollection(
-        data.get('userId'),
+        data.get('googleUserId'),
         data.get('name'),
         data.get('imageLink'),
         data.get('description'),
@@ -166,7 +166,7 @@ def addCollection():
 @datastore_bp.route("/getCollectionList", methods=["POST"])
 def getCollectionList():
     data = request.get_json()
-    userId = data['userId']
+    userId = data['googleUserId']
     page = data['page']
     limit = data['limit']
     sortBy = data['sortBy']
@@ -178,7 +178,7 @@ def getCollectionList():
         results.append(collection)
 
     return jsonify({
-        "message": f"Collections of user [{data.get('userId')}]",
+        "message": f"Collections of user [{data.get('googleUserId')}]",
         "data": results
     }), 200
 
