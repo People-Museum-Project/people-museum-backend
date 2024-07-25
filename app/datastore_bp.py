@@ -95,7 +95,7 @@ def getPersonList():
 
 
     persons = handler.getPersonListByUserId(userId, page, limit, sortBy, ascending)
-    total_count = handler.countEntities('Person')
+    total_count = handler.countEntities('Person', {'userId', userId})
 
     return jsonify({
             "message": f"PersonList of user [{userId}] retrieved successfully",
@@ -114,7 +114,7 @@ def getPersonListByCollection():
     page = data['page']
 
     persons = handler.getPersonListByCollectionId(collectionId, page, limit, sortBy=sortBy, ascending=ascending)
-    total_count = handler.countEntities('Person')
+    total_count = handler.countEntities('Person', {'collectionId', collectionId})
 
     return jsonify({
         "message": f"Person list of collection {collectionId} retrieved successfully",
@@ -188,7 +188,8 @@ def getCollectionList():
     for collection in handler.getCollectionListByUserId(userId, page, limit, sortBy, ascending):
         collection['id'] = collection.key.id_or_name
         results.append(collection)
-    total_count = handler.countEntities('Collection')
+
+    total_count = handler.countEntities('Collection', {'userId', userId})
 
     return jsonify({
         "message": f"Collections of user [{data.get('googleUserId')}]",
@@ -207,7 +208,7 @@ def getCollectionListByPerson():
     page = data['page']
 
     persons = handler.getCollectionListByPersonId(personId, page, limit, sortBy=sortBy, ascending=ascending)
-    total_count = handler.countEntities('Person')
+    total_count = handler.countEntities('Person', {'personId', personId})
 
     return jsonify({
         "message": f"Collection list of person {personId} retrieved successfully",
