@@ -14,7 +14,6 @@ class Assistant:
         self.__client = OpenAI(api_key=self.__api_key)
         self.__settings = {"model": DEFAULT_MODEL}
 
-
     def __set_context(self):
         # telling the AI the incoming conversation is based on this context
         # ask_xxx(context)
@@ -29,6 +28,15 @@ class Assistant:
             model_name (str): The model name.
         """
         self.__settings['model'] = model_name
+
+    def __create_assistant(self):
+        assistant = self.__client.beta.assistants.create(
+            name="Math Tutor",
+            instructions="You are a personal math tutor. Write and run code to answer math questions.",
+            tools=[{"type": "code_interpreter"}],
+            model="gpt-4o",
+        )
+        return assistant
 
     def ask_question(self, conversation, question, instructions, assistant_id=None):
         """
