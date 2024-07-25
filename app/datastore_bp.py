@@ -37,10 +37,12 @@ def getUser():
 @datastore_bp.route("/listUsers", methods=["GET"])
 def listUsers():
     users = handler.getAllUsers()
+    total_count = handler.countEntities('User')
+
     return jsonify({
         "message": "Users retrieved successfully",
         "data": users,
-        "total_count": len(users)
+        "total_count": total_count
     }), 200
 
 @datastore_bp.route("/updateUser", methods=["PUT"])
@@ -91,12 +93,14 @@ def getPersonList():
     limit = data['limit']
     page = data['page']
 
+
     persons = handler.getPersonListByUserId(userId, page, limit, sortBy, ascending)
+    total_count = handler.countEntities('Person')
 
     return jsonify({
             "message": f"PersonList of user [{userId}] retrieved successfully",
             "data": persons,
-            "total_count": len(persons)
+            "total_count": total_count
         }), 200
 
 
@@ -110,10 +114,12 @@ def getPersonListByCollection():
     page = data['page']
 
     persons = handler.getPersonListByCollectionId(collectionId, page, limit, sortBy=sortBy, ascending=ascending)
+    total_count = handler.countEntities('Person')
+
     return jsonify({
         "message": f"Person list of collection {collectionId} retrieved successfully",
         "data": persons,
-        "total_count": len(persons)
+        "total_count": total_count
     }), 200
 
 
@@ -182,11 +188,12 @@ def getCollectionList():
     for collection in handler.getCollectionListByUserId(userId, page, limit, sortBy, ascending):
         collection['id'] = collection.key.id_or_name
         results.append(collection)
+    total_count = handler.countEntities('Collection')
 
     return jsonify({
         "message": f"Collections of user [{data.get('googleUserId')}]",
         "data": results,
-        "total_count": len(results)
+        "total_count": total_count
     }), 200
 
 
@@ -200,11 +207,12 @@ def getCollectionListByPerson():
     page = data['page']
 
     persons = handler.getCollectionListByPersonId(personId, page, limit, sortBy=sortBy, ascending=ascending)
+    total_count = handler.countEntities('Person')
 
     return jsonify({
         "message": f"Collection list of person {personId} retrieved successfully",
         "data": persons,
-        "total_count": len(persons)
+        "total_count": total_count
     }), 200
 
 
