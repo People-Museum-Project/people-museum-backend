@@ -1,8 +1,8 @@
 from app.USFGenAI_OOP import Assistant
 
 class AIHandler:
-    def __init__(self, person_id):
-        self.assistant = Assistant(person_id)
+    def __init__(self):
+        self.assistant = Assistant()
 
     def generate_text(self, prompt, model='gpt-3.5-turbo'):
         try:

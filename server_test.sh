@@ -178,8 +178,7 @@ echo -e "\n"
 # Test /generateText endpoint
 curl -X POST "$BASE_URL/ai/generateText" -H "Content-Type: application/json" -d '{
   "prompt": "What is the capital of France?",
-  "model": "gpt-3.5-turbo",
-  "person_id": 1
+  "model": "gpt-3.5-turbo"
 }'
 echo -e "\n"
 
@@ -189,8 +188,7 @@ curl -X POST "$BASE_URL/ai/askQuestion" -H "Content-Type: application/json" -d '
   "conversation": [],
   "question": "What is the weather usually like in San Francisco?",
   "instructions": "You are a helpful assistant.",
-  "assistant_id": "asst_ubKwp4KW8cDePhDv7Gf6adf9",
-  "person_id": 1
+  "assistant_id": "asst_ubKwp4KW8cDePhDv7Gf6adf9"
 }'
 echo -e "\n"
 
@@ -201,8 +199,7 @@ curl -X POST "$BASE_URL/ai/generateSamplePrompts" -H "Content-Type: application/
   "num_samples": 3,
   "max_words": 50,
   "assistant_id": "asst_ubKwp4KW8cDePhDv7Gf6adf9",
-  "followups": true,
-  "person_id": 1
+  "followups": true
 }'
 echo -e "\n"
 
@@ -213,6 +210,5 @@ curl -X POST "$BASE_URL/ai/generateFollowups" -H "Content-Type: application/json
   "response": "Global warming is primarily caused by the increase in greenhouse gases in the atmosphere.",
   "num_samples": 2,
   "max_words": 50,
-  "assistant_id": "asst_ubKwp4KW8cDePhDv7Gf6adf9",
-  "person_id": 1
+  "assistant_id": "asst_ubKwp4KW8cDePhDv7Gf6adf9"
 }'
