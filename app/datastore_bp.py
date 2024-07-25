@@ -39,7 +39,8 @@ def listUsers():
     users = handler.getAllUsers()
     return jsonify({
         "message": "Users retrieved successfully",
-        "data": users
+        "data": users,
+        "total_count": len(users)
     }), 200
 
 @datastore_bp.route("/updateUser", methods=["PUT"])
@@ -90,9 +91,12 @@ def getPersonList():
     limit = data['limit']
     page = data['page']
 
+    persons = handler.getPersonListByUserId(userId, page, limit, sortBy, ascending)
+
     return jsonify({
             "message": f"PersonList of user [{userId}] retrieved successfully",
-            "data": handler.getPersonListByUserId(userId, page, limit, sortBy, ascending)
+            "data": persons,
+            "total_count": len(persons)
         }), 200
 
 
@@ -105,9 +109,11 @@ def getPersonListByCollection():
     limit = data['limit']
     page = data['page']
 
+    persons = handler.getPersonListByCollectionId(collectionId, page, limit, sortBy=sortBy, ascending=ascending)
     return jsonify({
         "message": f"Person list of collection {collectionId} retrieved successfully",
-        "data": handler.getPersonListByCollectionId(collectionId, page, limit, sortBy=sortBy, ascending=ascending)
+        "data": persons,
+        "total_count": len(persons)
     }), 200
 
 
@@ -179,7 +185,8 @@ def getCollectionList():
 
     return jsonify({
         "message": f"Collections of user [{data.get('googleUserId')}]",
-        "data": results
+        "data": results,
+        "total_count": len(results)
     }), 200
 
 
@@ -192,9 +199,12 @@ def getCollectionListByPerson():
     limit = data['limit']
     page = data['page']
 
+    persons = handler.getCollectionListByPersonId(personId, page, limit, sortBy=sortBy, ascending=ascending)
+
     return jsonify({
         "message": f"Collection list of person {personId} retrieved successfully",
-        "data": handler.getCollectionListByPersonId(personId, page, limit, sortBy=sortBy, ascending=ascending)
+        "data": persons,
+        "total_count": len(persons)
     }), 200
 
 

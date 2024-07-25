@@ -56,7 +56,7 @@ echo -e "\n"
 # Test getPersonList
 echo "Testing getPersonList..."
 curl -X POST "$BASE_URL/db/getPersonList" -H "Content-Type: application/json" -d '{
-  "userId": 5642061785071616,
+  "googleUserId": "7s6fzzlWcifsb7iS7Q8TdTOHoW72",
   "sortBy": "name",
   "limit": 10,
   "page": 1,
@@ -67,7 +67,7 @@ echo -e "\n"
 # Test getPersonListByCollection
 echo "Testing getPersonListByCollection..."
 curl -X POST "$BASE_URL/db/getPersonListByCollection" -H "Content-Type: application/json" -d '{
-  "collectionId": 5675594515742720,
+  "collectionId": 5715241090416640,
   "sortBy": "name",
   "limit": 10,
   "page": 1,
@@ -115,11 +115,11 @@ echo -e "\n"
 # Test getCollectionList
 echo "Testing getCollectionList..."
 curl -X POST "$BASE_URL/db/getCollectionList" -H "Content-Type: application/json" -d '{
-  "userId": 5642061785071616,
+  "googleUserId": "7s6fzzlWcifsb7iS7Q8TdTOHoW72",
   "page": 1,
   "limit": 10,
   "sortBy": "name",
-  "order": "asc"
+  "ascending": false
 }'
 echo -e "\n"
 

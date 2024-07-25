@@ -94,14 +94,14 @@ class Handler:
             person['id'] = person.key.id_or_name
         return persons
 
-    def getPersonKeysByCollectionId(self, collectionId):
+    def __getPersonKeysByCollectionId(self, collectionId):
         query = self.__client.query(kind='PersonCollection')
         query.add_filter('collectionId', '=', collectionId)
         results = query.fetch()
         return [entity['personId'] for entity in results]
 
     def getPersonListByCollectionId(self, collectionId, page, limit, sortBy="name", ascending=True):
-        personIds = self.getPersonKeysByCollectionId(collectionId)
+        personIds = self.__getPersonKeysByCollectionId(collectionId)
 
         keys = [self.__client.key('Person', personId) for personId in personIds]
 
@@ -176,14 +176,14 @@ class Handler:
         collection = self.__client.get(key)
         return collection
 
-    def getCollectionKeysByPersonId(self, personId):
+    def __getCollectionKeysByPersonId(self, personId):
         query = self.__client.query(kind="PersonCollection")
         query.add_filter('personId', '=', personId)
         results = query.fetch()
         return [entity['collectionId'] for entity in results]
 
     def getCollectionListByPersonId(self, personId, page, limit, sortBy="name", ascending=True):
-        collectionIds = self.getCollectionKeysByPersonId(personId)
+        collectionIds = self.__getCollectionKeysByPersonId(personId)
         keys = [self.__client.key('Collection', collectionId) for collectionId in collectionIds]
         collections = self.__client.get_multi(keys)
         sorted_collections = sorted(collections, key=lambda x: x[sortBy], reverse=not ascending)
