@@ -250,3 +250,8 @@ class Handler:
         for entity in results:
             self.__client.delete(entity.key)
         return True
+
+    def countEntities(self, kind):
+        query = self.__client.query(kind=kind)
+        count = len(list(query.fetch()))
+        return count
