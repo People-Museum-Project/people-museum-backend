@@ -251,11 +251,10 @@ class Handler:
             self.__client.delete(entity.key)
         return True
 
-    def countEntities(self, kind, filter=None):
+    def countEntities(self, kind, key, value):
         query = self.__client.query(kind=kind)
-        if filter:
-            key, value = filter
+        if key:
             query.add_filter(key, "=", value)
-            pass
         count = len(list(query.fetch()))
+
         return count
