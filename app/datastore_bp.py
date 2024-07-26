@@ -114,7 +114,7 @@ def getPersonListByCollection():
     page = data['page']
 
     persons = handler.getPersonListByCollectionId(collectionId, page, limit, sortBy=sortBy, ascending=ascending)
-    total_count = handler.countEntities('Person', {'collectionId', collectionId})
+    total_count = handler.countEntities('PersonCollection', {'collectionId', collectionId})
 
     return jsonify({
         "message": f"Person list of collection {collectionId} retrieved successfully",
