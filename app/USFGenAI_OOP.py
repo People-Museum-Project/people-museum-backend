@@ -16,11 +16,6 @@ class GenAILab:
         self.__client = OpenAI(api_key=self.__api_key)
         self.__settings = {"model": DEFAULT_MODEL}
 
-    def __set_context(self):
-        # telling the AI the incoming conversation is based on this context
-        # ask_xxx(context)
-        pass
-
     def set_model(self, model_name):
         """
         Sets the model for the OpenAI API.
@@ -38,12 +33,6 @@ class GenAILab:
             description=f"{name}'s assistant",
             model="gpt-3.5-turbo",
         )
-        # assistant = self.__client.beta.assistants.create(
-        #     name=name,
-        #     instructions=instruction,
-        #     tools=[{"type": "code_interpreter"}],
-        #     model="gpt-3.5-turbo",
-        # )
         return assistant
 
     def ask_question(self, conversation=None, question=None, instructions=None, assistant_id=None):
@@ -325,20 +314,12 @@ class GenAILab:
 
 if __name__ == "__main__":
     genAiLab = GenAILab()
-    # res = genAiLab.ask_question([], "What is the capital of France?", "You are a helpful assistant.")
-    # print(res['reply'])
 
-    # my_assistant = genAiLab.create_assistant("Micheal Jordan",
-    #                                          "He is a outstanding professional basketball player. "
-    #                                          "He is been seen as a legend.")
-    # print(1111)
-    # print(my_assistant)
-    # print(2222)
-
-    # def ask_question(self, conversation, question, instructions, assistant_id=None):
+    res = genAiLab.ask_question([], "What is the capital of France?", "You are a helpful assistant.")
+    print(res['reply'])
 
     res2 = genAiLab.ask_question(question="What do you think about impact of your career?", assistant_id="asst_ODfMyt1iajbaZMMBaCv1SsxL")
     print(res2)
 
-    # prompts = genAiLab.generate_sample_prompts("Tell me about climate change", 3, 10)
-    # print(prompts)
+    prompts = genAiLab.generate_sample_prompts("Tell me about climate change", 3, 10)
+    print(prompts)
