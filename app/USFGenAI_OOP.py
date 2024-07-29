@@ -1,11 +1,13 @@
 import os
+from pathlib import Path
+
 from app.ai_handler import *
 from openai import OpenAI
 
 DEFAULT_MODEL = "gpt-3.5-turbo"
 
 
-class Assistant:
+class GenAILab:
     # each assistant must belong to a person_id
     def __init__(self):
         self.__api_key = os.getenv('OPENAI_API_KEY')
@@ -29,16 +31,22 @@ class Assistant:
         """
         self.__settings['model'] = model_name
 
-    def __create_assistant(self):
+    def create_assistant(self, name, instruction):
         assistant = self.__client.beta.assistants.create(
-            name="Math Tutor",
-            instructions="You are a personal math tutor. Write and run code to answer math questions.",
-            tools=[{"type": "code_interpreter"}],
-            model="gpt-4o",
+            name=name,
+            instructions=f"you are {name}, {instruction}, you answer the question in {name}'s tone.",
+            description=f"{name}'s assistant",
+            model="gpt-3.5-turbo",
         )
+        # assistant = self.__client.beta.assistants.create(
+        #     name=name,
+        #     instructions=instruction,
+        #     tools=[{"type": "code_interpreter"}],
+        #     model="gpt-3.5-turbo",
+        # )
         return assistant
 
-    def ask_question(self, conversation, question, instructions, assistant_id=None):
+    def ask_question(self, conversation=None, question=None, instructions=None, assistant_id=None):
         """
         Asks a question to the OpenAI Chat API.
 
@@ -54,7 +62,7 @@ class Assistant:
         """
 
         if assistant_id is not None:
-            return self.__ask_assistant(conversation, question, instructions, assistant_id)
+            return self.__ask_assistant(question, assistant_id)
         else:
             return self.__ask_openai(conversation, instructions, question)
 
@@ -146,14 +154,12 @@ class Assistant:
         """
         return self.generate_followups(question, response, num_samples, max_words, assistant_id)
 
-    def __ask_assistant(self, conversation, question, instructions, assistant_id):
+    def __ask_assistant(self, question, assistant_id):
         """
         Private function to ask a question to an OpenAI Assistant with a specified ID.
 
         Args:
-            conversation (list): The conversation history.
             question (str): The question to ask.
-            instructions (str): Instructions or system prompt for the chat.
             assistant_id (str): The ID of the existing assistant.
 
         Returns:
@@ -173,8 +179,7 @@ class Assistant:
         # Run the assistant
         run = self.__client.beta.threads.runs.create_and_poll(
             thread_id=thread.id,
-            assistant_id=assistant_id,
-            instructions=instructions
+            assistant_id=assistant_id
         )
 
         if run.status == 'completed':
@@ -197,11 +202,11 @@ class Assistant:
                             latest_message += f"\n[{index}] {cited_file.filename}"
 
             if latest_message:
-                return {"reply": latest_message, "conversation": conversation}
+                return {"reply": latest_message}
             else:
-                return {"reply": None, "conversation": conversation}
+                return {"reply": None}
         else:
-            return {"reply": None, "conversation": conversation}
+            return {"reply": None}
 
     def __ask_openai(self, conversation, instructions, question):
         """
@@ -319,9 +324,21 @@ class Assistant:
 
 
 if __name__ == "__main__":
-    assistant = Assistant(1)
-    res = assistant.ask_question([], "What is the capital of France?", "You are a helpful assistant.")
-    print(res['reply'])
+    genAiLab = GenAILab()
+    # res = genAiLab.ask_question([], "What is the capital of France?", "You are a helpful assistant.")
+    # print(res['reply'])
 
-    prompts = assistant.generate_sample_prompts("Tell me about climate change", 3, 10)
-    print(prompts)
+    # my_assistant = genAiLab.create_assistant("Micheal Jordan",
+    #                                          "He is a outstanding professional basketball player. "
+    #                                          "He is been seen as a legend.")
+    # print(1111)
+    # print(my_assistant)
+    # print(2222)
+
+    # def ask_question(self, conversation, question, instructions, assistant_id=None):
+
+    res2 = genAiLab.ask_question(question="What do you think about impact of your career?", assistant_id="asst_ODfMyt1iajbaZMMBaCv1SsxL")
+    print(res2)
+
+    # prompts = genAiLab.generate_sample_prompts("Tell me about climate change", 3, 10)
+    # print(prompts)

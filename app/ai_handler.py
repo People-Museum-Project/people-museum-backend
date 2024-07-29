@@ -1,8 +1,8 @@
-from app.USFGenAI_OOP import Assistant
+from app.USFGenAI_OOP import GenAILab
 
 class AIHandler:
     def __init__(self):
-        self.assistant = Assistant()
+        self.assistant = GenAILab()
 
     def generate_text(self, prompt, model='gpt-3.5-turbo'):
         try:
@@ -12,7 +12,7 @@ class AIHandler:
         except Exception as e:
             return {"error": str(e)}
 
-    def ask_question(self, conversation, question, instructions, assistant_id=None):
+    def ask_question(self, conversation=None, question=None, instructions=None, assistant_id=None):
         try:
             response = self.assistant.ask_question(conversation, question, instructions, assistant_id)
             return response

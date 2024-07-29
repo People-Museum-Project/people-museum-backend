@@ -15,12 +15,10 @@ def generateText():
 @ai_bp.route("/askQuestion", methods=["POST"])
 def askQuestion():
     data = request.get_json()
-    conversation = data.get('conversation', [])
     question = data.get('question')
-    instructions = data.get('instructions', "You are a helpful assistant.")
     assistant_id = data.get('assistant_id')
     ai_handler = AIHandler()
-    result = ai_handler.ask_question(conversation, question, instructions, assistant_id)
+    result = ai_handler.ask_question(question=question, assistant_id=assistant_id)
     return jsonify({"message": "Question answered successfully", "data": result}), 200
 
 @ai_bp.route("/generateSamplePrompts", methods=["POST"])

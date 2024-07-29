@@ -73,13 +73,14 @@ def deleteUser():
 @datastore_bp.route("/addPerson", methods=["POST"])
 def addPerson():
     data = request.get_json()
+    assistant_id = handler.createAssistant(data["name"], data["description"])
     handler.addPerson(
         data["name"],
         data["imageLink"],
         data["description"],
-        data["context"],
         data["googleUserId"],
-        data["public"]
+        data["public"],
+        assistant_id
     )
     return jsonify({"message": "Person created successfully", "data": data}), 200
 

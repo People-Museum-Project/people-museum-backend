@@ -1,8 +1,8 @@
 import time
 
 from google.cloud import datastore
-
 from app.datastore_client import Client
+from app.USFGenAI_OOP import GenAILab
 
 
 class Handler:
@@ -68,15 +68,15 @@ class Handler:
         self.__client.delete(user)
         return True
 
-    def addPerson(self, name, imageLink, description, context, userId, public=0):
+    def addPerson(self, name, imageLink, description, userId, public=0, assistantId=None):
         key = self.__client.key(self.__person)
         person = datastore.Entity(key=key)
         person['name'] = name
         person['imageLink'] = imageLink
         person['description'] = description
-        person['context'] = context
         person['userId'] = userId
         person['public'] = public
+        person['assistantId'] = assistantId
         person['date'] = int(time.time()) + self.__PST_OFFSET
         self.__client.put(person)
 
@@ -258,3 +258,8 @@ class Handler:
         count = len(list(query.fetch()))
 
         return count
+
+    def createAssistant(self, name, instruction):
+        genAiLab = GenAILab()
+        assistant = genAiLab.create_assistant(name, instruction)
+        return assistant.id
