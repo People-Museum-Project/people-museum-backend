@@ -48,7 +48,7 @@ curl -X POST "$BASE_URL/db/addPerson" -H "Content-Type: application/json" -d '{
   "name": "William Shakespeare",
   "imageLink": "http://upload.wikimedia.org/wikipedia/commons/thumb/2/21/William_Shakespeare_by_John_Taylor%2C_edited.jpg/550px-William_Shakespeare_by_John_Taylor%2C_edited.jpg",
   "description": "William Shakespeare was an English playwright, poet, and actor, widely regarded as the greatest writer in the English language and the worlds greatest dramatist. His extant works, including collaborations, consist of some 39 plays, 154 sonnets, three long narrative poems, and a few other verses, some of uncertain authorship.",
-  "googleUserId": "cBb38qpYoqPHjzltF9v7LRIVXBk2",
+  "googleUserId": "dCa0BxpDj2TCFB2RNxvkd9uNbn52",
   "public": true
 }'
 echo -e "\n"
@@ -186,7 +186,7 @@ echo -e "\n"
 # Test /askQuestion endpoint
 curl -X POST "$BASE_URL/ai/askQuestion" -H "Content-Type: application/json" -d '{
   "question": "Tell me about your major accomplishment?",
-  "assistant_id": "asst_Yn9kwHUmMC7xbQuPdl2aIidV"
+  "assistantId": "asst_Yn9kwHUmMC7xbQuPdl2aIidV"
 }'
 echo -e "\n"
 

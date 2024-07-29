@@ -16,7 +16,7 @@ def generateText():
 def askQuestion():
     data = request.get_json()
     question = data.get('question')
-    assistant_id = data.get('assistant_id')
+    assistant_id = data.get('assistantId')
     ai_handler = AIHandler()
     result = ai_handler.ask_question(question=question, assistant_id=assistant_id)
     return jsonify({"message": "Question answered successfully", "data": result}), 200
