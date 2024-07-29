@@ -42,13 +42,13 @@ curl -X DELETE "$BASE_URL/db/deleteUser" -H "Content-Type: application/json" -d 
 echo -e "\n"
 
 # Test addPerson
+# 'William Shakespeare': ("William Shakespeare was an English playwright, poet, and actor, widely regarded as the greatest writer in the English language and the world's greatest dramatist. His extant works, including collaborations, consist of some 39 plays, 154 sonnets, three long narrative poems, and a few other verses, some of uncertain authorship.", 'http://upload.wikimedia.org/wikipedia/commons/thumb/2/21/William_Shakespeare_by_John_Taylor%2C_edited.jpg/550px-William_Shakespeare_by_John_Taylor%2C_edited.jpg'),
 echo "Testing addPerson..."
 curl -X POST "$BASE_URL/db/addPerson" -H "Content-Type: application/json" -d '{
-  "name": "Alice",
-  "imageLink": "http://example.com/person.jpg",
-  "description": "A foo person",
-  "context": "Some context",
-  "userId": 5642061785071616,
+  "name": "William Shakespeare",
+  "imageLink": "http://upload.wikimedia.org/wikipedia/commons/thumb/2/21/William_Shakespeare_by_John_Taylor%2C_edited.jpg/550px-William_Shakespeare_by_John_Taylor%2C_edited.jpg",
+  "description": "William Shakespeare was an English playwright, poet, and actor, widely regarded as the greatest writer in the English language and the worlds greatest dramatist. His extant works, including collaborations, consist of some 39 plays, 154 sonnets, three long narrative poems, and a few other verses, some of uncertain authorship.",
+  "googleUserId": "cBb38qpYoqPHjzltF9v7LRIVXBk2",
   "public": true
 }'
 echo -e "\n"
@@ -68,7 +68,7 @@ echo -e "\n"
 echo "Testing getPersonListByCollection..."
 curl -X POST "$BASE_URL/db/getPersonListByCollection" -H "Content-Type: application/json" -d '{
   "collectionId": 5715241090416640,
-  "sortBy": "name",
+  "sortBy": "date",
   "limit": 10,
   "page": 1,
   "ascending": true
@@ -169,8 +169,8 @@ echo -e "\n"
 
 # Remove person from collection
 curl -X DELETE "$BASE_URL/db/deletePersonFromCollection" -H "Content-Type: application/json" -d '{
-    "personId": 5748214695198720,
-    "collectionId": 5755374237908992
+    "personId": 5769501089988608,
+    "collectionId": 5630815723585536
 }'
 echo -e "\n"
 
@@ -185,10 +185,8 @@ echo -e "\n"
 
 # Test /askQuestion endpoint
 curl -X POST "$BASE_URL/ai/askQuestion" -H "Content-Type: application/json" -d '{
-  "conversation": [],
-  "question": "What is the weather usually like in San Francisco?",
-  "instructions": "You are a helpful assistant.",
-  "assistant_id": "asst_ubKwp4KW8cDePhDv7Gf6adf9"
+  "question": "Tell me about your major accomplishment?",
+  "assistant_id": "asst_Yn9kwHUmMC7xbQuPdl2aIidV"
 }'
 echo -e "\n"
 
