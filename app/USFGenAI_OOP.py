@@ -280,7 +280,7 @@ class GenAILab:
             object: The response object from OpenAI audio API.
         """
         if not voice:
-            voice = "alloy"
+            voice = "Onyx"
         try:
             # Not saving the file in local. just streaming the content to the frontend.
             # speech_file_path = Path(__file__).parent / "speech.mp3"
