@@ -50,7 +50,7 @@ def generateFollowups():
 def textToSpeech():
     data = request.get_json()
     text = data.get('text')
-    voice = data.get('voice', 'Onyx')  # default voice if not provided
+    voice = data.get('voice', 'onyx')  # default voice if not provided
     ai_handler = AIHandler()
     result = ai_handler.text_to_speech(text, voice)
 
