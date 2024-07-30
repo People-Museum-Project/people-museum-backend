@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Response
 from app.ai_handler import AIHandler
 
 ai_bp = Blueprint('ai_bp', __name__)
@@ -45,6 +45,7 @@ def generateFollowups():
     result = ai_handler.generate_followups(question, response, num_samples, max_words, assistant_id)
     return jsonify({"message": "Follow-ups generated successfully", "data": result}), 200
 
+
 @ai_bp.route("/textToSpeech", methods=["POST"])
 def textToSpeech():
     data = request.get_json()
@@ -52,10 +53,12 @@ def textToSpeech():
     voice = data.get('voice', 'alloy')  # default voice if not provided
     ai_handler = AIHandler()
     result = ai_handler.text_to_speech(text, voice)
+
     if result:
-        return jsonify({"message": "Text converted to speech successfully", "data": result}), 200
+        return Response(result, mimetype='audio/mpeg', status=200)
     else:
         return jsonify({"message": "Error converting text to speech"}), 500
+
 
 @ai_bp.route("/speechRecognition", methods=["POST"])
 def speechRecognition():
