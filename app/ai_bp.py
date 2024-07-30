@@ -44,3 +44,26 @@ def generateFollowups():
     ai_handler = AIHandler()
     result = ai_handler.generate_followups(question, response, num_samples, max_words, assistant_id)
     return jsonify({"message": "Follow-ups generated successfully", "data": result}), 200
+
+@ai_bp.route("/textToSpeech", methods=["POST"])
+def textToSpeech():
+    data = request.get_json()
+    text = data.get('text')
+    voice = data.get('voice', 'alloy')  # default voice if not provided
+    ai_handler = AIHandler()
+    result = ai_handler.text_to_speech(text, voice)
+    if result:
+        return jsonify({"message": "Text converted to speech successfully", "data": result}), 200
+    else:
+        return jsonify({"message": "Error converting text to speech"}), 500
+
+@ai_bp.route("/speechRecognition", methods=["POST"])
+def speechRecognition():
+    if 'file' not in request.files:
+        return jsonify({"message": "No file part"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"message": "No selected file"}), 400
+    ai_handler = AIHandler()
+    result = ai_handler.speech_recognition(file)
+    return jsonify({"message": "Speech recognized successfully", "data": result}), 200

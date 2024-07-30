@@ -32,3 +32,17 @@ class AIHandler:
             return followups
         except Exception as e:
             return {"error": str(e)}
+
+    def text_to_speech(self, text, voice=None):
+        try:
+            content = self.assistant.text_to_speech(text, voice)
+            return content
+        except Exception as e:
+            return {"error": str(e)}
+
+    def speech_recognition(self, file):
+        try:
+            content = self.assistant.speech_recognition(file)
+            return content
+        except Exception as e:
+            return {"error": str(e)}
