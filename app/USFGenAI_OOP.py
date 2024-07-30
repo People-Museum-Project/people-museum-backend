@@ -282,13 +282,14 @@ class GenAILab:
         if not voice:
             voice = "alloy"
         try:
-            speech_file_path = Path(__file__).parent / "speech.mp3"
+            # Not saving the file in local. just streaming the content to the frontend.
+            # speech_file_path = Path(__file__).parent / "speech.mp3"
             response = self.__client.audio.speech.create(
                 model="tts-1",
                 voice=voice,
                 input=text
             )
-            response.stream_to_file(speech_file_path)
+            # response.stream_to_file(speech_file_path)
             return response.content
         except Exception as e:
             print(f"Error converting text to speech: {e}")
@@ -315,11 +316,13 @@ class GenAILab:
 if __name__ == "__main__":
     genAiLab = GenAILab()
 
-    res = genAiLab.ask_question([], "What is the capital of France?", "You are a helpful assistant.")
-    print(res['reply'])
+    # res = genAiLab.ask_question([], "What is the capital of France?", "You are a helpful assistant.")
+    # print(res['reply'])
+    #
+    # res2 = genAiLab.ask_question(question="What do you think about impact of your career?", assistant_id="asst_ODfMyt1iajbaZMMBaCv1SsxL")
+    # print(res2)
+    #
+    # prompts = genAiLab.generate_sample_prompts("Tell me about climate change", 3, 10)
+    # print(prompts)
 
-    res2 = genAiLab.ask_question(question="What do you think about impact of your career?", assistant_id="asst_ODfMyt1iajbaZMMBaCv1SsxL")
-    print(res2)
-
-    prompts = genAiLab.generate_sample_prompts("Tell me about climate change", 3, 10)
-    print(prompts)
+    genAiLab.text_to_speech("hello, YJ, how is your day going?")
