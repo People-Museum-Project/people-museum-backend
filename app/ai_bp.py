@@ -129,9 +129,12 @@ def speechRecognition():
     """
     if 'file' not in request.files:
         return jsonify({"message": "No file part"}), 400
+
     file = request.files['file']
+
     if file.filename == '':
         return jsonify({"message": "No selected file"}), 400
+
     ai_handler = AIHandler()
     result = ai_handler.speech_recognition(file)
     return jsonify({"message": "Speech recognized successfully", "data": result}), 200

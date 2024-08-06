@@ -1,7 +1,6 @@
 import os
-from pathlib import Path
+import tempfile
 
-from app.ai_handler import *
 from openai import OpenAI
 
 DEFAULT_MODEL = "gpt-3.5-turbo"
@@ -295,34 +294,29 @@ class GenAILab:
             print(f"Error converting text to speech: {e}")
             return None
 
-    def speech_recognition(self, file):
+    def speech_recognition(self, audio_io):
         """
         Converts speech to text using OpenAI's Whisper model.
 
         Args:
-            file (str): Path to the audio file.
+            audio_io (BytesIO): In-memory audio file.
 
         Returns:
             str: The transcribed text.
         """
-        with open(file, "rb") as audio_file:
-            translation = self.__client.audio.translations.create(
-                model="whisper-1",
-                file=audio_file
-            )
-        return translation.text
+        # Save the in-memory audio to a temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_file:
+            temp_file.write(audio_io.read())
+            temp_file_path = temp_file.name
 
-
-if __name__ == "__main__":
-    genAiLab = GenAILab()
-
-    # res = genAiLab.ask_question([], "What is the capital of France?", "You are a helpful assistant.")
-    # print(res['reply'])
-    #
-    # res2 = genAiLab.ask_question(question="What do you think about impact of your career?", assistant_id="asst_ODfMyt1iajbaZMMBaCv1SsxL")
-    # print(res2)
-    #
-    # prompts = genAiLab.generate_sample_prompts("Tell me about climate change", 3, 10)
-    # print(prompts)
-
-    genAiLab.text_to_speech("hello, YJ, how is your day going?")
+        try:
+            # Open the temporary file and pass it to the OpenAI API
+            with open(temp_file_path, 'rb') as audio_file:
+                translation = self.__client.audio.translations.create(
+                    model="whisper-1",
+                    file=audio_file
+                )
+            return translation.text
+        finally:
+            # Clean up the temporary file
+            os.remove(temp_file_path)
