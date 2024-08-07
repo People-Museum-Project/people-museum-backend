@@ -14,9 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Step 5: Copy the rest of the application code
 COPY . .
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=./peoplemuseumyeah-b85c3138781f.json
-ENV PROJECT=peoplemuseumyeah
-ENV OPENAI_API_KEY=sk-proj-DMgsfqtbuOTieKn15DmDT3BlbkFJzIkxVRgfzsHhkcCkLqZ9
+"add GCP Project name, json file, and openAI key here"
 
 # Step 6: Expose the port your application runs on (e.g., 5000)
 EXPOSE 8080
