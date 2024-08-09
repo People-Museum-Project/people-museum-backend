@@ -8,6 +8,98 @@ The base URL for accessing the API endpoints:
 - **Online environment: `https://peoplemuseumyeah.uc.r.appspot.com/db`**
 - **Local environment: `http://127.0.0.1:8080/`**
 
+## Endpoints Overview
+
+### User Management
+- **Create User**: `/db/addUser`  
+  Adds a new user to the system. 
+
+- **Retrieve User**: `/db/getUser`  
+  Retrieves a user by their Google User ID.
+
+- **List Users**: `/db/listUsers`  
+  Retrieves a list of all users.
+
+- **Update User**: `/db/updateUser`  
+  Updates the details of an existing user. 
+
+- **Delete User**: `/db/deleteUser`  
+  Deletes a user by their Google User ID. 
+
+### Person Management
+- **Create Person**: `/db/addPerson`  
+  Adds a new person, associating them with an AI assistant ID. 
+
+- **Retrieve Person List**: `/db/getPersonList`  
+  Retrieves a list of people associated with a specific user. 
+
+- **Retrieve Person**: `/db/getPerson`  
+  Retrieves a person by their Person ID. 
+
+- **Update Person**: `/db/updatePerson`  
+  Updates an existing person's details. 
+
+- **Delete Person**: `/db/deletePerson`  
+  Deletes a person by their Person ID. 
+
+### Collection Management
+- **Create Collection**: `/db/addCollection`  
+  Creates a new collection.
+
+- **Retrieve Collection List**: `/db/getCollectionList`  
+  Retrieves a list of collections associated with a specific user. 
+
+- **Retrieve Collection**: `/db/getCollection`  
+  Retrieves a collection by its ID. 
+
+- **Update Collection**: `/db/updateCollection`  
+  Updates an existing collection. 
+
+- **Delete Collection**: `/db/deleteCollection`  
+  Deletes a collection by its ID. 
+
+### Additional Collection-Related Endpoints
+- **Add Person to Collection**: `/db/addPersonCollection`  
+  Adds a person to a collection. Detailed documentation is currently not provided in `API-doc.md`.
+
+- **Remove Person from Collection**: `/db/deletePersonFromCollection`  
+  Removes a person from a collection. Detailed documentation is currently not provided in `API-doc.md`.
+
+### AI Integration Endpoints
+- **Generate Text**: `/ai/generateText`  
+  Generates text based on a prompt using a specified AI model (default: GPT-3.5-Turbo).
+
+- **Ask Question**: `/ai/askQuestion`  
+  Asks a question to a specified AI assistant and returns the response.
+
+- **Generate Sample Prompts**: `/ai/generateSamplePrompts`  
+  Generates sample prompts based on a given context and AI assistant.
+
+- **Generate Follow-up Questions**: `/ai/generateFollowups`  
+  Generates follow-up questions based on a question, response, and AI assistant.
+
+- **Text-to-Speech**: `/ai/textToSpeech`  
+  Converts text to speech using a specified voice.
+
+- **Speech Recognition**: `/ai/speechRecognition`  
+  Recognizes speech from an uploaded audio file and returns transcribed text.
+
+## Data Models
+Although not explicitly defined as an API document, the source code reveals the following data structures:
+
+- **User**: `name`, `imageLink`, `googleUserId`, `gmail`, `description`, `favourite`.
+- **Person**: `name`, `imageLink`, `description`, `userId`, `public`, `assistantId`, `date`.
+- **Collection**: `userId`, `name`, `imageLink`, `description`, `date`, `isPublic`.
+- **PersonCollection**: `personId`, `collectionId`, unique (composite key).
+
+## Backend & Infrastructure
+- The backend uses Flask, a Python web framework, and runs on port 8080.
+- Google Cloud Datastore is used for data storage and retrieval.
+- The code mentions a "PST_OFFSET" used for time-related operations, likely for storing timestamps in PST.
+
+## AI Integration
+The People Museum API integrates with OpenAI's API for AI-powered functionalities like text generation, question answering, prompt generation, and speech processing. It uses the "GPT-3.5-Turbo" model as the default for text generation.
+
 ## Endpoints
 
 ### 1. Index
