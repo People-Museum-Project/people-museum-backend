@@ -1,25 +1,24 @@
 # Dockerfile for backend
-# Step 1: Use a Python base image
+# Use a Python base image
 FROM python:3.9-alpine
 
-# Step 2: Set the working directory
+# Set the working directory
 WORKDIR /app
 
-# Step 3: Copy requirements.txt
+# Copy requirements.txt
 COPY requirements.txt ./
 
-# Step 4: Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN --mount=type=secret,id=OPENAI_API_KEY,target=/run/secrets/OPENAI_API_KEY.txt \
+    pip install --no-cache-dir -r requirements.txt
 
-# Step 5: Copy the rest of the application code
+# Copy the rest of the application code
 COPY . .
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=./yourGCPcredit.json
-ENV PROJECT=peoplemuseumyeah
-ENV OPENAI_API_KEY=your openAI api key for this project
+ENV PROJECT=peoplemuseum-431817
+ENV GOOGLE_APPLICATION_CREDENTIALS=./newYJpeoplemuseum-431817-cd4d14f169c9.json
 
-# Step 6: Expose the port your application runs on (e.g., 5000)
+# Expose the port the application runs on
 EXPOSE 8080
 
-# Step 7: Start the backend server
+# Start the backend server
 CMD ["python", "run.py"]
