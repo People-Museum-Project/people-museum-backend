@@ -1,5 +1,6 @@
 from app.USFGenAI_OOP import GenAILab
 
+
 class AIHandler:
     def __init__(self):
         # Initialize the AIHandler instance with an instance of GenAILab.
