@@ -9,11 +9,16 @@ DEFAULT_MODEL = "gpt-3.5-turbo"
 class GenAILab:
     # each assistant must belong to a person_id
     def __init__(self):
-        self.__api_key = os.getenv('OPENAI_API_KEY')
+        self.__api_key = self.get_secret()
         if not self.__api_key:
             raise Exception("Error: The API key is not set. Set the environment variable 'OPENAI_API_KEY'.")
         self.__client = OpenAI(api_key=self.__api_key)
         self.__settings = {"model": DEFAULT_MODEL}
+
+    def get_secret(self):
+        with open("./run/secrets/OPENAI_API_KEY.txt", "r") as f:
+            OPENAI_API_KEY = f.readlines()[0]
+        return OPENAI_API_KEY
 
     def set_model(self, model_name):
         """
