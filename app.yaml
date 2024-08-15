@@ -8,4 +8,4 @@ handlers:
   script: auto
 
 env_variables:
-  PROJECT: "peoplemuseumyeah"
+  PROJECT: "peoplemuseum-431817"
