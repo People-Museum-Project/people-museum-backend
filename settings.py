@@ -1,0 +1,3 @@
+PROJECT="peoplemuseum-431817"
+OPENAI_API_KEY="projects/249642833104/secrets/OPENAI_API_KEY/versions/1"
+GOOGLE_APPLICATION_CREDENTIALS=".peoplemuseum-431817-cadf29853fd4.json"
