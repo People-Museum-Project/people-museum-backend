@@ -8,14 +8,14 @@ WORKDIR /app
 # Copy requirements.txt
 COPY requirements.txt ./
 
-RUN --mount=type=secret,id=OPENAI_API_KEY,target=/run/secrets/OPENAI_API_KEY.txt \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
 
-ENV PROJECT=peoplemuseum-431817
-ENV GOOGLE_APPLICATION_CREDENTIALS=./newYJpeoplemuseum-431817-cd4d14f169c9.json
+ENV GOOGLE_APPLICATION_CREDENTIALS='./.peoplemuseum-431817-cadf29853fd4.json'
+
+# GCP Credential will be set by docker compose build process using secret files on local directory
 
 # Expose the port the application runs on
 EXPOSE 8080
