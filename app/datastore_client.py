@@ -1,11 +1,11 @@
 from google.cloud import datastore
-import os
+
+from settings import PROJECT
 
 
 class Client:
     def __init__(self):
-        # Set the path to service account key file
-        self.__project_name = os.environ["PROJECT"]
+        self.__project_name = PROJECT
 
     def connect(self):
         # Initialize the Datastore client
