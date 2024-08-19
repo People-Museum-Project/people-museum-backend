@@ -1,4 +1,5 @@
-import io
+import os
+import tempfile
 
 from openai import OpenAI
 from app.secret_manager import GCPSecretManager
@@ -7,168 +8,318 @@ from settings import OPENAI_API_KEY
 DEFAULT_MODEL = "gpt-3.5-turbo"
 
 
-class AIComponent:
-    _client_initialized = False
-
+class GenAILab:
+    # each assistant must belong to a person_id
     def __init__(self):
-        self._api_key = GCPSecretManager().access(OPENAI_API_KEY)
-        if not self._api_key:
+        gcp = GCPSecretManager()
+        self.__api_key = gcp.access(OPENAI_API_KEY)
+        if not self.__api_key:
             raise Exception("Error: The API key is not set. Set the environment variable 'OPENAI_API_KEY'.")
-        self._settings = {"model": DEFAULT_MODEL}
-
-    def _initialize_client(self):
-        if not self._client_initialized:
-            self._client = OpenAI(api_key=self._api_key)
-            self._client_initialized = True
+        self.__client = OpenAI(api_key=self.__api_key)
+        self.__settings = {"model": DEFAULT_MODEL}
 
     def set_model(self, model_name):
-        self._settings['model'] = model_name
+        """
+        Sets the model for the OpenAI API.
+        model_options: ["gpt-3.5-turbo", "gpt-4", "gpt-4o"]
 
+        Args:
+            model_name (str): The model name.
+        """
+        self.__settings['model'] = model_name
 
-class AssistantManager(AIComponent):
     def create_assistant(self, name, instruction):
-        self._initialize_client()
-        assistant = self._client.beta.assistants.create(
+        assistant = self.__client.beta.assistants.create(
             name=name,
-            instructions=f"You are {name}, {instruction}, you answer questions in {name}'s tone.",
+            instructions=f"you are {name}, {instruction}, you answer the question in {name}'s tone.",
             description=f"{name}'s assistant",
-            model=self._settings["model"]
+            model="gpt-3.5-turbo",
         )
         return assistant
 
-    def ask_assistant(self, question, assistant_id):
-        self._initialize_client()
-        thread = self._client.beta.threads.create()
-        self._client.beta.threads.messages.create(thread_id=thread.id, role="user", content=question)
-        run = self._client.beta.threads.runs.create_and_poll(thread_id=thread.id, assistant_id=assistant_id)
+    def ask_question(self, conversation=None, question=None, instructions=None, assistant_id=None):
+        """
+        Asks a question to the OpenAI Chat API.
 
-        if run.status == 'completed':
-            messages = self._client.beta.threads.messages.list(thread_id=thread.id)
-            latest_message = next((m.content[0].text.value for m in messages.data if m.role == "assistant"), None)
-            return latest_message
-        return None
+        Args:
+            conversation (list): The conversation history.
+            question (str): The question to ask.
+            instructions (str): Instructions or system prompt for the chat.
+            assistant_id (str): The ID of the existing assistant.
 
-    def generate_assistant_prompts(self, context, instructions, assistant_id):
-        self._initialize_client()
-        thread = self._client.beta.threads.create()
-        self._client.beta.threads.messages.create(thread_id=thread.id, role="user", content=context)
-        run = self._client.beta.threads.runs.create_and_poll(thread_id=thread.id, assistant_id=assistant_id, instructions=instructions)
+        Returns:
+            dict: The response from the OpenAI Chat API,
+                  containing the reply and updated conversation.
+        """
 
-        if run.status == 'completed':
-            messages = self._client.beta.threads.messages.list(thread_id=thread.id)
-            prompts = [m.content[0].text.value for m in messages.data if m.role == "assistant"]
-            return prompts[0].split('\n') if prompts else []
-        return []
+        if assistant_id is not None:
+            return self.__ask_assistant(question, assistant_id)
+        else:
+            return self.__ask_openai(conversation, instructions, question)
 
-    def ask_assistant_gender(self, assistant_id):
-        question = "What is your gender? Please respond with only `1` if you are male and `0` if you are not. Reply only `0` or `1`, Do not include any additional words or explanations."
-        return self.ask_assistant(question, assistant_id)
+    def ask_assistant_question(self, conversation, question, instructions, assistant_id):
+        """
+        Asks a question to an OpenAI Assistant with a specified ID.
 
+        Args:
+            question (str): The question to ask.
+            instructions (str): Instructions or system prompt for the chat.
+            conversation (list): The conversation history.
+            assistant_id (str): The ID of the existing assistant.
+        """
+        return self.ask_question(conversation, question, instructions, assistant_id)
 
-class PromptGenerator(AIComponent):
-    def generate_sample_prompts(self, context, num_samples, max_words, followups=False):
-        self._initialize_client()
-        instructions = f"Generate {num_samples} {'follow-up questions' if followups else 'sample prompts'} from the user perspective. Each should be no more than {max_words} words."
-        response = self._client.chat.completions.create(
-            model=self._settings["model"],
-            messages=[
+    def generate_sample_prompts(self, context, num_samples, max_words, assistant_id=None, followups=None):
+        """
+        Generates a prompt based on the context.
+
+        Args:
+            context (str): The context for generating the prompt.
+            num_samples (int): Number of prompts to generate.
+            max_words (int): Maximum number of words for the prompt.
+            assistant_id (str): The ID of the existing assistant.
+            followups (bool): Whether the prompts are follow-up questions.
+
+        Returns:
+            list: A list of generated prompts.
+        """
+        if followups is not None:
+            instructions = f"Generate {num_samples} follow-up questions from the user perspective based on the conversation. Each follow-up question should be no more than {max_words} words. Only provide the prompts in the response"
+        else:
+            instructions = f"Generate {num_samples} sample prompts from the user perspective based on the context. Each sample prompt should be no more than {max_words} words. Only provide the questions in the response."
+
+        if assistant_id is not None:
+            return self.__generate_assistant_prompts(context, instructions, assistant_id)
+        else:
+            response = self.__client.chat.completions.create(model=self.__settings["model"], messages=[
                 {"role": "system", "content": instructions},
                 {"role": "user", "content": context}
-            ]
+            ])
+            (dict(response).get('usage'))
+            (response.model_dump_json(indent=2))
+            prompts = response.choices[0].message.content.strip().split('\n')
+            return prompts
+
+    def generate_assistant_sample_prompts(self, context, num_samples, max_words, assistant_id):
+        """
+        Generates a prompt based on the OpenAI Assistant with a specified ID.
+
+        Args:
+            context (str): The context for generating the prompt.
+            num_samples (int): Number of prompts to generate.
+            max_words (int): Maximum number of words for the prompt.
+            assistant_id (str): The ID of the existing assistant.
+        """
+        return self.generate_sample_prompts(context, num_samples, max_words, assistant_id)
+
+    def generate_followups(self, question, response, num_samples, max_words, assistant_id=None):
+        """
+        Generates follow-up questions.
+
+        Args:
+            question (str): The previous question asked.
+            response (str): The response to the previous question.
+            num_samples (int): Number of follow-up questions to generate.
+            max_words (int): Maximum number of words for each follow-up question.
+            assistant_id (str): The ID of the existing assistant.
+
+        Returns:
+            list: A list of follow-up questions.
+        """
+        recent_history = f"User: {question}\nAssistant: {response}\n"
+        return self.generate_sample_prompts(recent_history, num_samples, max_words, assistant_id, followups=True)
+
+    def generate_assistant_followups(self, question, response, num_samples, max_words, assistant_id):
+        """
+        Generates follow-up questions based on the OpenAI Assistant with a specified ID.
+
+        Args:
+            question (str): The previous question asked.
+            response (str): The response to the previous question.
+            num_samples (int): Number of follow-up questions to generate.
+            max_words (int): Maximum number of words for each follow-up question.
+            assistant_id (str): The ID of the existing assistant.
+
+        Returns:
+            list: A list of follow-up questions.
+        """
+        return self.generate_followups(question, response, num_samples, max_words, assistant_id)
+
+    def __ask_assistant(self, question, assistant_id):
+        """
+        Private function to ask a question to an OpenAI Assistant with a specified ID.
+
+        Args:
+            question (str): The question to ask.
+            assistant_id (str): The ID of the existing assistant.
+
+        Returns:
+            dict: The response from the OpenAI Chat API,
+                  containing the reply with citations and updated conversation.
+        """
+        # Create a new thread
+        thread = self.__client.beta.threads.create()
+
+        # Add the user's question to the thread
+        self.__client.beta.threads.messages.create(
+            thread_id=thread.id,
+            role="user",
+            content=question
         )
-        return response.choices[0].message.content.strip().split('\n')
 
+        # Run the assistant
+        run = self.__client.beta.threads.runs.create_and_poll(
+            thread_id=thread.id,
+            assistant_id=assistant_id
+        )
 
-class ConversationManager(AIComponent):
-    def ask_question(self, conversation, question, instructions=None):
-        self._initialize_client()
-        messages = [{"role": "system", "content": instructions}] + conversation if instructions else conversation
+        if run.status == 'completed':
+            # List all messages in the thread
+            messages = self.__client.beta.threads.messages.list(
+                thread_id=thread.id
+            )
+
+            # Get the latest assistant message
+            latest_message = None
+            for message in messages.data:
+                if message.role == "assistant":
+                    latest_message = message.content[0].text.value
+                    annotations = message.content[0].text.annotations
+                    for index, annotation in enumerate(annotations):
+                        if file_citation := getattr(annotation, "file_citation", None):
+                            cited_file = self.__client.files.retrieve(file_citation.file_id)
+                            latest_message = latest_message.replace(annotation.text,
+                                                                    f"[{index}]({cited_file.filename})")
+                            latest_message += f"\n[{index}] {cited_file.filename}"
+
+            if latest_message:
+                return {"reply": latest_message}
+            else:
+                return {"reply": None}
+        else:
+            return {"reply": None}
+
+    def __ask_openai(self, conversation, instructions, question):
+        """
+        Private function to ask a question to the OpenAI Chat API.
+
+        Args:
+            conversation (list): The conversation history.
+            instructions (str): Instructions or system prompt for the chat.
+
+        Returns:
+            dict: The response from the OpenAI Chat API,
+                  containing the reply and updated conversation.
+        """
+        messages = [{"role": "system", "content": instructions}] + conversation
         messages.append({"role": "user", "content": question})
 
-        response = self._client.chat.completions.create(
-            model=self._settings["model"],
+        # Make the API call
+        response = self.__client.chat.completions.create(
+            model=self.__settings["model"],
             messages=messages
         )
+
+        # Extract the answer from the response
         answer = response.choices[0].message.content.strip()
         conversation.append({"role": "assistant", "content": answer})
+
         return {"reply": answer, "conversation": conversation}
 
+    def __generate_assistant_prompts(self, context, instructions, assistant_id):
+        """
+        Private function to generate prompts using an OpenAI Assistant.
 
-class SpeechManager(AIComponent):
-    def text_to_speech(self, text, voice="onyx"):
-        self._initialize_client()
+        Args:
+            context (str): The context for generating the prompt.
+            instructions (str): Instructions or system prompt for the chat.
+            assistant_id (str): The ID of the existing assistant.
+
+        Returns:
+            list: A list of generated prompts.
+        """
+        # Create a new thread
+        thread = self.__client.beta.threads.create()
+
+        # Add the user's question to the thread
+        self.__client.beta.threads.messages.create(
+            thread_id=thread.id,
+            role="user",
+            content=context
+        )
+
+        # Run the assistant
+        run = self.__client.beta.threads.runs.create_and_poll(
+            thread_id=thread.id,
+            assistant_id=assistant_id,
+            instructions=instructions
+        )
+
+        if run.status == 'completed':
+            # List all messages in the thread
+            messages = self.__client.beta.threads.messages.list(
+                thread_id=thread.id
+            )
+
+            # Get the latest assistant message
+            prompts = []
+            for message in messages.data:
+                if message.role == "assistant":
+                    prompts = message.content[0].text.value.split('\n')
+            return prompts
+        else:
+            return []
+
+    def text_to_speech(self, text, voice=None):
+        """
+        Converts text to speech using OpenAI's TTS model.
+
+        Args:
+            text (str): The text to convert to speech.
+            voice: The voice to use.
+
+        Returns:
+            object: The response object from OpenAI audio API.
+        """
+        if not voice:
+            voice = "onyx"
         try:
-            response = self._client.audio.speech.create(model="tts-1", voice=voice, input=text)
+            # Not saving the file in local. just streaming the content to the frontend.
+            # speech_file_path = Path(__file__).parent / "speech.mp3"
+            response = self.__client.audio.speech.create(
+                model="tts-1",
+                voice=voice,
+                input=text
+            )
+            # response.stream_to_file(speech_file_path)
             return response.content
         except Exception as e:
             print(f"Error converting text to speech: {e}")
             return None
 
     def speech_recognition(self, audio_io):
-        self._initialize_client()
+        """
+        Converts speech to text using OpenAI's Whisper model.
+
+        Args:
+            audio_io (BytesIO): In-memory audio file.
+
+        Returns:
+            str: The transcribed text.
+        """
+        # Save the in-memory audio to a temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_file:
+            temp_file.write(audio_io.read())
+            temp_file_path = temp_file.name
+
         try:
-            audio_data = audio_io.read()
-            audio_file = io.BytesIO(audio_data)
-            translation = self._client.audio.translations.create(model="whisper-1", file=audio_file)
+            # Open the temporary file and pass it to the OpenAI API
+            with open(temp_file_path, 'rb') as audio_file:
+                translation = self.__client.audio.translations.create(
+                    model="whisper-1",
+                    file=audio_file
+                )
             return translation.text
-        except Exception as e:
-            print(f"Error in speech recognition: {e}")
-            return None
-
-
-class GenAILab:
-    def __init__(self):
-        self._assistant_manager = None
-        self._prompt_generator = None
-        self._conversation_manager = None
-        self._speech_manager = None
-
-    def _get_assistant_manager(self):
-        if self._assistant_manager is None:
-            self._assistant_manager = AssistantManager()
-        return self._assistant_manager
-
-    def _get_prompt_generator(self):
-        if self._prompt_generator is None:
-            self._prompt_generator = PromptGenerator()
-        return self._prompt_generator
-
-    def _get_conversation_manager(self):
-        if self._conversation_manager is None:
-            self._conversation_manager = ConversationManager()
-        return self._conversation_manager
-
-    def _get_speech_manager(self):
-        if self._speech_manager is None:
-            self._speech_manager = SpeechManager()
-        return self._speech_manager
-
-    def set_model(self, model_name):
-        self._get_assistant_manager().set_model(model_name)
-        self._get_prompt_generator().set_model(model_name)
-        self._get_conversation_manager().set_model(model_name)
-        self._get_speech_manager().set_model(model_name)
-
-    def create_assistant(self, name, instruction):
-        return self._get_assistant_manager().create_assistant(name, instruction)
-
-    def ask_question(self, conversation, question, instructions=None):
-        return self._get_conversation_manager().ask_question(conversation, question, instructions)
-
-    def generate_sample_prompts(self, context, num_samples, max_words, followups=False):
-        return self._get_prompt_generator().generate_sample_prompts(context, num_samples, max_words, followups)
-
-    def ask_assistant(self, question, assistant_id):
-        return self._get_assistant_manager().ask_assistant(question, assistant_id)
-
-    def generate_assistant_prompts(self, context, instructions, assistant_id):
-        return self._get_assistant_manager().generate_assistant_prompts(context, instructions, assistant_id)
-
-    def ask_assistant_gender(self, assistant_id):
-        return self._get_assistant_manager().ask_assistant_gender(assistant_id)
-
-    def text_to_speech(self, text, voice=None):
-        return self._get_speech_manager().text_to_speech(text, voice)
-
-    def speech_recognition(self, audio_io):
-        return self._get_speech_manager().speech_recognition(audio_io)
+        finally:
+            # Clean up the temporary file
+            os.remove(temp_file_path)
