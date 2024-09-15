@@ -37,7 +37,7 @@ echo -e "\n"
 # Test deleteUser
 echo "Testing deleteUser..."
 curl -X DELETE "$BASE_URL/db/deleteUser" -H "Content-Type: application/json" -d '{
-  "userId": 5644523313037312
+  "userId": 5683371963318272
 }'
 echo -e "\n"
 
@@ -49,7 +49,8 @@ curl -X POST "$BASE_URL/db/addPerson" -H "Content-Type: application/json" -d '{
   "imageLink": "http://upload.wikimedia.org/wikipedia/commons/thumb/2/21/William_Shakespeare_by_John_Taylor%2C_edited.jpg/550px-William_Shakespeare_by_John_Taylor%2C_edited.jpg",
   "description": "William Shakespeare was an English playwright, poet, and actor, widely regarded as the greatest writer in the English language and the worlds greatest dramatist. His extant works, including collaborations, consist of some 39 plays, 154 sonnets, three long narrative poems, and a few other verses, some of uncertain authorship.",
   "googleUserId": "dCa0BxpDj2TCFB2RNxvkd9uNbn52",
-  "public": true
+  "public": 1,
+  "gender": 1
 }'
 echo -e "\n"
 
@@ -97,7 +98,7 @@ echo -e "\n"
 # Test deletePerson
 echo "Testing deletePerson..."
 curl -X DELETE "$BASE_URL/db/deletePerson" -H "Content-Type: application/json" -d '{
-  "personId": 5665673409724416
+  "personId": 5683371963318272
 }'
 echo -e "\n"
 
