@@ -1,5 +1,3 @@
-
-Here's an updated README.md file based on the provided sources:
 # People Museum
 
 "I would trade all my technology for an afternoon with Socrates.” -- Steve Jobs
